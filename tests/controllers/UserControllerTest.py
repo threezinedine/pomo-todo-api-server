@@ -17,16 +17,18 @@ from app.utils.database import (
 from tests.utils import (
     assertStatus, 
     assertUserWithDict,
+    createFirstUserBy,
 )
 from tests.constants import (
     FIRST_USER_USERNAME,
     FIRST_USER_PASSWORD,
 )
+from tests.database import get_testing_session
 
 
 class UserControllerTest(unittest.TestCase):
     def setUp(self):
-        self.session = next(get_session())
+        self.session = next(get_testing_session())
         self.user_controller = UserController(self.session) 
 
     def tearDown(self):
@@ -38,6 +40,17 @@ class UserControllerTest(unittest.TestCase):
 
         assertStatus(status, HTTP_200_OK)
         self.assertListEqual(response, [])
+
+    def test_given_a_user_exists_when_get_all_users_then_returns_the_array_contains_that_user(self):
+        createFirstUserBy(self.user_controller)
+
+        status, response = self.user_controller.get_all_users()
+        assertStatus(status, HTTP_200_OK)
+        assert len(response) == 1 
+        assertUserWithDict(response[0],
+                            username=FIRST_USER_USERNAME,
+                            password=FIRST_USER_PASSWORD)
+
 
     def test_given_no_users_exist_when_create_new_users_then_returns_HTTP_200_OK_and_that_new_user(self):
         status, response = self.user_controller.create_new_user(username=FIRST_USER_USERNAME, 
