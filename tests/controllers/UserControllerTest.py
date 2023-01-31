@@ -10,6 +10,11 @@ from app.constants import (
 )
 from tests.utils import (
     assertStatus, 
+    assertUserWithDict,
+)
+from tests.constants import (
+    FIRST_USER_USERNAME,
+    FIRST_USER_PASSWORD,
 )
 
 
@@ -26,3 +31,12 @@ class UserControllerTest(unittest.TestCase):
 
         assertStatus(status, HTTP_200_OK)
         self.assertListEqual(response, [])
+
+    def test_given_no_users_exist_when_create_new_users_then_returns_HTTP_200_OK_and_that_new_user(self):
+        status, response = self.user_controller.create_new_user(username=FIRST_USER_USERNAME, 
+                                                                    password=FIRST_USER_PASSWORD)
+
+        assertStatus(status, HTTP_200_OK)
+        assertUserWithDict(response,
+                            username=FIRST_USER_USERNAME,
+                            password=FIRST_USER_PASSWORD)
