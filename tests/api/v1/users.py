@@ -27,7 +27,7 @@ class UserEndToEndTest(unittest.TestCase):
         self.session = next(get_testing_session())
         app.dependency_overrides[get_session] = get_testing_session
         self.test_client = TestClient(app)
-        user_controller = UserController(self.session)
+        self.user_controller = UserController(self.session)
 
     def tearDown(self):
         clear_database(self.session)
@@ -43,3 +43,6 @@ class UserEndToEndTest(unittest.TestCase):
         )
 
         assert response.status_code == HTTP_200_OK
+
+    def test_register_with_existed_username_feature(self):
+        pass

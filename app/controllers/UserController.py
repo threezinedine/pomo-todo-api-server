@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from app.constants import (
     OK_STATUS,
 )
-from databases.models import (
+from databases.models.User import (
     User,
 )
 

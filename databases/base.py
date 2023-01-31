@@ -14,8 +14,8 @@ from app.constants import (
 load_dotenv()
 Base = declarative_base()
 
-from .models.User import User
-from .models.Task import Task
+from .models import User
+from .models import Task
 
 engine = create_engine(os.getenv(DATABASE_URI_ENV_VARIABLE_KEY, DATABASE_URI_DEFAULT))
 LocalSession = sessionmaker(autocommit=False, autoflush=False, bind=engine)
