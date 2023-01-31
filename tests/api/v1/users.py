@@ -9,6 +9,9 @@ from app.constants import (
     PASSWORD_KEY,
     HTTP_200_OK,
 )
+from app.controllers import (
+    UserController,
+)
 from tests.constants import (
     FIRST_USER_USERNAME,
     FIRST_USER_PASSWORD,
@@ -17,15 +20,15 @@ from tests.constants import (
 
 class UserEndToEndTest(unittest.TestCase):
     def setUp(self):
-        session = get_session()
-        test_client = TestClient(app)
-        user_controller = UserController(session)
+        self.session = next(get_session())
+        self.test_client = TestClient(app)
+        user_controller = UserController(self.session)
 
     def tearDown(self):
-        session.close()
+        self.session.close()
 
     def test_register_successfully_feature(self):
-        response = test_client.post(
+        response = self.test_client.post(
             USER_REGISTER_ROUTE,
             json={
                 USERNAME_KEY: FIRST_USER_USERNAME,
@@ -33,4 +36,5 @@ class UserEndToEndTest(unittest.TestCase):
             }
         )
 
+        print(response.status_code)
         assert response.status_code == HTTP_200_OK
