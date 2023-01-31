@@ -11,6 +11,9 @@ from app.controllers import UserController
 from app.constants import (
     HTTP_200_OK,
 )
+from app.utils.database import (
+    clear_database,
+)
 from tests.utils import (
     assertStatus, 
     assertUserWithDict,
@@ -27,6 +30,7 @@ class UserControllerTest(unittest.TestCase):
         self.user_controller = UserController(self.session) 
 
     def tearDown(self):
+        clear_database(self.session)
         self.session.close()
 
     def test_given_no_users_exist_when_get_all_users_then_returns_empty_array(self):

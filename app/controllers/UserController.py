@@ -18,7 +18,7 @@ class UserController:
             The database session which can handle inside
     """
     def __init__(self, session: Session):
-        pass
+        self.session = session
 
     def get_all_users(self):
         """
@@ -54,5 +54,8 @@ class UserController:
             user: User 
                 The user which is created
         """
+        user = User(username=username, password=password)
+        session = self.session.add(user)
+        self.session.commit()
 
-        return OK_STATUS, User(username=username, password=password)
+        return OK_STATUS, user
