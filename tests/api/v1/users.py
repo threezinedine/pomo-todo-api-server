@@ -20,6 +20,7 @@ from app.controllers import (
 from tests.constants import (
     FIRST_USER_USERNAME,
     FIRST_USER_PASSWORD,
+    ERROR_RESPONSE_DETAIL_KEY,
 )
 from tests.database import get_testing_session
 
@@ -59,4 +60,4 @@ class UserEndToEndTest(unittest.TestCase):
         )
 
         assert response.status_code == HTTP_409_CONFLICT
-        assert response.json().detail == USERNAME_EXISTS_MESSAGE
+        assert response.json()[ERROR_RESPONSE_DETAIL_KEY] == USERNAME_EXISTS_MESSAGE
