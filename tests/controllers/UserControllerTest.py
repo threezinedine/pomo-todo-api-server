@@ -79,3 +79,4 @@ class UserControllerTest(unittest.TestCase):
                                                                     password=FIRST_USER_PASSWORD)
 
         assertStatus(status, HTTP_409_CONFLICT, USERNAME_EXISTS_MESSAGE)
+        assert response is None
