@@ -11,8 +11,8 @@ if __name__ == "__main__":
     if args.actions == "run":
         subprocess.run(["py", "main.py"])
     elif args.actions == "test":
-        subprocess.run(["py", "test_all.py"])
+        subprocess.run(["pytest", "test_all.py"])
     elif args.actions == "unit":
-        subprocess.run(["py", "test_unittest.py"])
+        subprocess.run(["pytest", "test_unittest.py"])
     else:
-        subprocess.run(["py", "test.py"])
+        subprocess.run(["pytest", "test.py"])

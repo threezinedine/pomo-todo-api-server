@@ -10,6 +10,8 @@ from databases.models import (
 from app.controllers import UserController
 from app.constants import (
     HTTP_200_OK,
+    HTTP_409_CONFLICT,
+    USERNAME_EXISTS_MESSAGE,
 )
 from app.utils.database import (
     clear_database,
@@ -69,3 +71,11 @@ class UserControllerTest(unittest.TestCase):
         assertUserWithDict(user,
                             username=FIRST_USER_USERNAME,
                             password=FIRST_USER_PASSWORD)
+
+    def test_given_a_user_exist_when_create_new_user_then_returns_HTTP_409_CONFLICT_and_None(self):
+        createFirstUserBy(self.user_controller)
+
+        status, response = self.user_controller.create_new_user(username=FIRST_USER_USERNAME, 
+                                                                    password=FIRST_USER_PASSWORD)
+
+        assertStatus(status, HTTP_409_CONFLICT, USERNAME_EXISTS_MESSAGE)
