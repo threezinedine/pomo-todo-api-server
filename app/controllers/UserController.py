@@ -32,7 +32,7 @@ class UserController:
             users: list 
                 The list of all users inside the project
         """
-        return OK_STATUS, []
+        return OK_STATUS, self.session.query(User).all()
 
     def create_new_user(self, username: str, password: str):
         """
