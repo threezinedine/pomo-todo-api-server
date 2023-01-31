@@ -11,4 +11,4 @@ def assertStatus(status, status_code=HTTP_200_OK, detail_message=None):
 
 def assertUserWithDict(user, **user_data_dict):
     for key, value in user_data_dict.items():
-        assert getattr(user) == value
+        assert getattr(user, key) == value

@@ -20,12 +20,12 @@ class User(Base):
     userId = Column(Integer, primary_key=True, autoincrement=True)
     username = Column(String(length=USERNAME_MAX_LENGTH), unique=True)
     password = Column(String(length=PASSWORD_MAX_LENGTH))
-    description = Column(String(length=USER_DESCRIPTION_MAX_LENGTH))
+    description = Column(String(length=USER_DESCRIPTION_MAX_LENGTH), nullable=True)
     imagePath = Column(String(length=IMAGE_PATH_MAX_LENGTH), nullable=True)
 
     def __init__(self, username: str, 
                     password: str, 
-                    description: str,
+                    description: str = None,
                     imagePath: str = None):
         self.username = username
         self.password = password

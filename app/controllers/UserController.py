@@ -3,6 +3,9 @@ from sqlalchemy.orm import Session
 from app.constants import (
     OK_STATUS,
 )
+from databases.models import (
+    User,
+)
 
 
 class UserController:
@@ -20,5 +23,36 @@ class UserController:
     def get_all_users(self):
         """
         Get all users from the database
+
+        Returns
+        -------
+            status: status_code, detail_message 
+                The result status
+
+            users: list 
+                The list of all users inside the project
         """
         return OK_STATUS, []
+
+    def create_new_user(self, username: str, password: str):
+        """
+        Create a new user.
+
+        Parameters
+        ----------
+            username: str 
+                The username information
+
+            password: str 
+                The password information
+
+        Returns
+        -------
+            status: status_code, detail_message 
+                The result status
+
+            user: User 
+                The user which is created
+        """
+
+        return OK_STATUS, User(username=username, password=password)
