@@ -4,7 +4,7 @@ from fastapi.testclient import TestClient
 from databases.base import get_session
 from main import app
 from app.constants import (
-    USER_REGISTER_ROUTE,
+    USER_REGISTER_FULL_ROUTE,
     USERNAME_KEY,
     PASSWORD_KEY,
     HTTP_200_OK,
@@ -38,7 +38,7 @@ class UserEndToEndTest(unittest.TestCase):
 
     def test_register_successfully_feature(self):
         response = self.test_client.post(
-            USER_REGISTER_ROUTE,
+            USER_REGISTER_FULL_ROUTE,
             json={
                 USERNAME_KEY: FIRST_USER_USERNAME,
                 PASSWORD_KEY: FIRST_USER_PASSWORD,
@@ -52,7 +52,7 @@ class UserEndToEndTest(unittest.TestCase):
                                                 password=FIRST_USER_PASSWORD)
 
         response = self.test_client.post(
-            USER_REGISTER_ROUTE,
+            USER_REGISTER_FULL_ROUTE,
             json={
                 USERNAME_KEY: FIRST_USER_USERNAME,
                 PASSWORD_KEY: FIRST_USER_PASSWORD,

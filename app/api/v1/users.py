@@ -24,7 +24,7 @@ from databases.base import get_session
 router = APIRouter(prefix=USER_BASE_ROUTE)
 
 
-@router.post("/register", 
+@router.post(USER_REGISTER_ROUTE, 
         status_code=HTTP_200_OK)
 def register_new_user(register_request_infor: RegisterRequestUser, session: Session = Depends(get_session)):
     user_controller = UserController(session)
