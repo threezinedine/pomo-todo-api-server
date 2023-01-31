@@ -4,6 +4,9 @@ from databases.base import (
     Base,
     get_session,
 )
+from databases.models import (
+    User,
+)
 from app.controllers import UserController
 from app.constants import (
     HTTP_200_OK,
@@ -38,5 +41,14 @@ class UserControllerTest(unittest.TestCase):
 
         assertStatus(status, HTTP_200_OK)
         assertUserWithDict(response,
+                            username=FIRST_USER_USERNAME,
+                            password=FIRST_USER_PASSWORD)
+
+    def test_given_no_users_exist_when_create_new_users_then_that_user_exist_inside_the_database(self):
+        status, response = self.user_controller.create_new_user(username=FIRST_USER_USERNAME, 
+                                                                    password=FIRST_USER_PASSWORD)
+
+        user = self.session.query(User).filter(User.username==FIRST_USER_USERNAME).first()
+        assertUserWithDict(user,
                             username=FIRST_USER_USERNAME,
                             password=FIRST_USER_PASSWORD)
