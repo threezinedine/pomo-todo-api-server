@@ -15,11 +15,14 @@ from app.constants import (
     WELCOM_MESSAGE_ENV_VARIABLE_KEY,
     EMPTY_STRING,
 )
+from app.api.v1 import users
 from databases.base import get_session
 
 
 load_dotenv()
 app = FastAPI()
+
+app.include_router(users.router)
 
 
 @app.get(ROOT_ROUTE)

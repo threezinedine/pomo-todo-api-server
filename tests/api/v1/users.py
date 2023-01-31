@@ -9,6 +9,9 @@ from app.constants import (
     PASSWORD_KEY,
     HTTP_200_OK,
 )
+from app.utils.database import (
+    clear_database,
+)
 from app.controllers import (
     UserController,
 )
@@ -16,15 +19,18 @@ from tests.constants import (
     FIRST_USER_USERNAME,
     FIRST_USER_PASSWORD,
 )
+from tests.database import get_testing_session
 
 
 class UserEndToEndTest(unittest.TestCase):
     def setUp(self):
-        self.session = next(get_session())
+        self.session = next(get_testing_session())
+        app.dependency_overrides[get_session] = get_testing_session
         self.test_client = TestClient(app)
         user_controller = UserController(self.session)
 
     def tearDown(self):
+        clear_database(self.session)
         self.session.close()
 
     def test_register_successfully_feature(self):
@@ -36,5 +42,4 @@ class UserEndToEndTest(unittest.TestCase):
             }
         )
 
-        print(response.status_code)
         assert response.status_code == HTTP_200_OK
