@@ -8,6 +8,8 @@ from app.constants import (
     USERNAME_KEY,
     PASSWORD_KEY,
     HTTP_200_OK,
+    HTTP_409_CONFLICT,
+    USERNAME_EXISTS_MESSAGE,
 )
 from app.utils.database import (
     clear_database,
@@ -45,4 +47,16 @@ class UserEndToEndTest(unittest.TestCase):
         assert response.status_code == HTTP_200_OK
 
     def test_register_with_existed_username_feature(self):
-        pass
+        self.user_controller.create_new_user(username=FIRST_USER_USERNAME, 
+                                                password=FIRST_USER_PASSWORD)
+
+        response = self.test_client.post(
+            USER_REGISTER_ROUTE,
+            json={
+                USERNAME_KEY: FIRST_USER_USERNAME,
+                PASSWORD_KEY: FIRST_USER_PASSWORD,
+            }
+        )
+
+        assert response.status_code == HTTP_409_CONFLICT
+        assert response.json().detail == USERNAME_EXISTS_MESSAGE
