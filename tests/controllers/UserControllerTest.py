@@ -25,3 +25,4 @@ class UserControllerTest(unittest.TestCase):
         status, response = self.user_controller.get_all_users()
 
         assertStatus(status, HTTP_200_OK)
+        self.assertListEqual(response, [])

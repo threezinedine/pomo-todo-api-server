@@ -1,5 +1,9 @@
 from sqlalchemy.orm import Session
 
+from app.constants import (
+    OK_STATUS,
+)
+
 
 class UserController:
     """
@@ -12,3 +16,9 @@ class UserController:
     """
     def __init__(self, session: Session):
         pass
+
+    def get_all_users(self):
+        """
+        Get all users from the database
+        """
+        return OK_STATUS, []
