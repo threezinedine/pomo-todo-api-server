@@ -8,8 +8,10 @@ from app.constants import (
     USERNAME_KEY,
     PASSWORD_KEY,
     HTTP_200_OK,
+    HTTP_404_NOT_FOUND,
     HTTP_409_CONFLICT,
     USERNAME_EXISTS_MESSAGE,
+    USERNAME_DOES_NOT_EXIST_MESSAGE,
     USER_LOGIN_FULL_ROUTE,
 )
 from app.utils.database import (
@@ -89,3 +91,6 @@ class UserEndToEndTest(unittest.TestCase):
                 PASSWORD_KEY: FIRST_USER_WRONG_PASSWORD,
             }
         )
+
+        assert response.status_code == HTTP_404_NOT_FOUND
+        assert response.json()[ERROR_RESPONSE_DETAIL_KEY] == USERNAME_DOES_NOT_EXIST_MESSAGE
