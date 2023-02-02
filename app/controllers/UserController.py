@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 
 from app.constants import (
     OK_STATUS,
+    USERNAME_DOES_NOT_EXIST_STATUS,
     USERNAME_EXIST_STATUS,
 )
 from databases.models.User import (
@@ -68,4 +69,10 @@ class UserController:
         return status, new_user
 
     def get_user_by_username_and_password(self, username: str, password: str):
-        return OK_STATUS, self.session.query(User).filter(User.username == username and User.password == password).first()
+        status = OK_STATUS
+        user = self.session.query(User).filter(User.username == username).first()
+
+        if user is None:
+            status = USERNAME_DOES_NOT_EXIST_STATUS
+
+        return status, user
