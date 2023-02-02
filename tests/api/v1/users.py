@@ -21,6 +21,8 @@ from app.controllers import (
 from tests.constants import (
     FIRST_USER_USERNAME,
     FIRST_USER_PASSWORD,
+    FIRST_USER_WRONG_USERNAME,
+    FIRST_USER_WRONG_PASSWORD,
     ERROR_RESPONSE_DETAIL_KEY,
 )
 from tests.database import get_testing_session
@@ -76,3 +78,14 @@ class UserEndToEndTest(unittest.TestCase):
         )
 
         assert response.status_code == HTTP_200_OK
+
+    def test_login_user_non_existed_username(self):
+        createFirstUserBy(self.user_controller)
+
+        response = self.test_client.post(
+            USER_LOGIN_FULL_ROUTE,
+            json={
+                USERNAME_KEY: FIRST_USER_WRONG_USERNAME,
+                PASSWORD_KEY: FIRST_USER_WRONG_PASSWORD,
+            }
+        )
