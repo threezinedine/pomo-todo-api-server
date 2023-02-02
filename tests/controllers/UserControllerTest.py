@@ -11,7 +11,9 @@ from app.controllers import UserController
 from app.constants import (
     HTTP_200_OK,
     HTTP_409_CONFLICT,
+    HTTP_404_NOT_FOUND,
     USERNAME_EXISTS_MESSAGE,
+    USERNAME_DOES_NOT_EXIST_MESSAGE,
 )
 from app.utils.database import (
     clear_database,
@@ -90,3 +92,10 @@ class UserControllerTest(unittest.TestCase):
         assertStatus(status, HTTP_200_OK)
         assertUserWithDict(response, username=FIRST_USER_USERNAME,
                                         password=FIRST_USER_PASSWORD)
+
+    def test_given_when_get_a_user_with_non_existed_username_then_return_HTTP_404_NOT_FOUND_and_None(self):
+        status, response = self.user_controller.get_user_by_username_and_password(username=FIRST_USER_USERNAME,
+                                                                                    password=FIRST_USER_PASSWORD)
+
+        assertStatus(status, HTTP_404_NOT_FOUND, USERNAME_DOES_NOT_EXIST_MESSAGE)
+        assert response is None
