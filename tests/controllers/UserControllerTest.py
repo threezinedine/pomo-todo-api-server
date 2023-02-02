@@ -84,7 +84,7 @@ class UserControllerTest(unittest.TestCase):
     def test_given_a_user_exist_when_get_a_user_with_username_and_password_then_return_HTTP_200_OK_and_that_user(self):
         createFirstUserBy(self.user_controller)
 
-        status, response = self.user_controller.get_user_by_username_and_password(user=FIRST_USER_USERNAME,
+        status, response = self.user_controller.get_user_by_username_and_password(username=FIRST_USER_USERNAME,
                                                                                     password=FIRST_USER_PASSWORD)
 
         assertStatus(status, HTTP_200_OK)
