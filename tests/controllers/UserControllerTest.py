@@ -10,10 +10,12 @@ from databases.models import (
 from app.controllers import UserController
 from app.constants import (
     HTTP_200_OK,
-    HTTP_409_CONFLICT,
+    HTTP_401_UNAUTHORIZED,
     HTTP_404_NOT_FOUND,
+    HTTP_409_CONFLICT,
     USERNAME_EXISTS_MESSAGE,
     USERNAME_DOES_NOT_EXIST_MESSAGE,
+    PASSWORD_IS_INCORRECT_MESSAGE,
 )
 from app.utils.database import (
     clear_database,
@@ -26,6 +28,7 @@ from tests.utils import (
 from tests.constants import (
     FIRST_USER_USERNAME,
     FIRST_USER_PASSWORD,
+    FIRST_USER_WRONG_PASSWORD,
 )
 from tests.database import get_testing_session
 
@@ -98,4 +101,13 @@ class UserControllerTest(unittest.TestCase):
                                                                                     password=FIRST_USER_PASSWORD)
 
         assertStatus(status, HTTP_404_NOT_FOUND, USERNAME_DOES_NOT_EXIST_MESSAGE)
+        assert response is None
+
+    def test_given_when_get_a_user_with_existed_username_and_not_valid_password_then_return_HTTP_401_UNAUTHORIZED_and_None(self):
+        createFirstUserBy(self.user_controller)
+
+        status, response = self.user_controller.get_user_by_username_and_password(username=FIRST_USER_USERNAME,
+                                                                                    password=FIRST_USER_WRONG_PASSWORD)
+
+        assertStatus(status, HTTP_401_UNAUTHORIZED, PASSWORD_IS_INCORRECT_MESSAGE)
         assert response is None
