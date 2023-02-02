@@ -8,10 +8,12 @@ from app.constants import (
     USERNAME_KEY,
     PASSWORD_KEY,
     HTTP_200_OK,
+    HTTP_401_UNAUTHORIZED,
     HTTP_404_NOT_FOUND,
     HTTP_409_CONFLICT,
     USERNAME_EXISTS_MESSAGE,
     USERNAME_DOES_NOT_EXIST_MESSAGE,
+    PASSWORD_IS_INCORRECT_MESSAGE,
     USER_LOGIN_FULL_ROUTE,
 )
 from app.utils.database import (
@@ -94,3 +96,17 @@ class UserEndToEndTest(unittest.TestCase):
 
         assert response.status_code == HTTP_404_NOT_FOUND
         assert response.json()[ERROR_RESPONSE_DETAIL_KEY] == USERNAME_DOES_NOT_EXIST_MESSAGE
+
+    def test_login_user_with_existed_username_and_non_match_password(self):
+        createFirstUserBy(self.user_controller)
+
+        response = self.test_client.post(
+            USER_LOGIN_FULL_ROUTE,
+            json={
+                USERNAME_KEY: FIRST_USER_USERNAME,
+                PASSWORD_KEY: FIRST_USER_WRONG_PASSWORD,
+            }
+        )
+
+        assert response.status_code == HTTP_401_UNAUTHORIZED
+        assert response.json()[ERROR_RESPONSE_DETAIL_KEY] == PASSWORD_IS_INCORRECT_MESSAGE
