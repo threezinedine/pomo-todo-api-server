@@ -64,12 +64,30 @@ class UserController:
         if user is None:
             new_user = User(username=username, password=password)
             status = OK_STATUS 
-            session = self.session.add(new_user)
+            self.session.add(new_user)
             self.session.commit()
 
         return status, new_user
 
     def get_user_by_username_and_password(self, username: str, password: str):
+        """
+        Get a user from the database by username and password 
+
+        Parameters
+        ----------
+            username: str
+                The username
+            password: str 
+                The password
+
+        Returns
+        -------
+            status: status_code, detail_message 
+                The result status
+
+            user: User 
+                The user which is created
+        """
         status = OK_STATUS
         user = self.session.query(User).filter(User.username == username).first()
 
