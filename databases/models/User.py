@@ -32,5 +32,8 @@ class User(Base):
         self.description = description
         self.imagePath
 
+    def match_password(self, password: str):
+        return self.password == password
+
     def __repr__(self):
         return f"<User userId={self.userId} username={self.username} />"

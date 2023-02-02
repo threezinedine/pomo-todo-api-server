@@ -4,6 +4,7 @@ from app.constants import (
     OK_STATUS,
     USERNAME_DOES_NOT_EXIST_STATUS,
     USERNAME_EXIST_STATUS,
+    PASSWORD_IS_INCORRECT_STATUS,
 )
 from databases.models.User import (
     User,
@@ -74,5 +75,9 @@ class UserController:
 
         if user is None:
             status = USERNAME_DOES_NOT_EXIST_STATUS
+        else:
+            if not user.match_password(password):
+                status = PASSWORD_IS_INCORRECT_STATUS
+                user = None
 
         return status, user
