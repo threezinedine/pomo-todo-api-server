@@ -12,6 +12,8 @@ from app.constants import (
     USER_BASE_ROUTE,
     USER_REGISTER_ROUTE,
     USER_LOGIN_ROUTE,
+    USER_KEY,
+    TOKEN_KEY,
 )
 from app.schemas import (
     RegisterRequestUser,
@@ -55,4 +57,7 @@ def login(user: LoginRequestUser, session: Session = Depends(get_session)):
 
     handleStatus(status)
 
-    return user
+    return {
+        USER_KEY: user,
+        TOKEN_KEY: "testing_token",
+    }

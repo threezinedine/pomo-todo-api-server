@@ -7,6 +7,8 @@ from app.constants import (
     USER_REGISTER_FULL_ROUTE,
     USERNAME_KEY,
     PASSWORD_KEY,
+    USER_KEY,
+    TOKEN_KEY,
     HTTP_200_OK,
     HTTP_401_UNAUTHORIZED,
     HTTP_404_NOT_FOUND,
@@ -82,6 +84,8 @@ class UserEndToEndTest(unittest.TestCase):
         )
 
         assert response.status_code == HTTP_200_OK
+        assert response.json()[USER_KEY] is not None
+        assert response.json()[TOKEN_KEY] is not None
 
     def test_login_user_non_existed_username(self):
         createFirstUserBy(self.user_controller)

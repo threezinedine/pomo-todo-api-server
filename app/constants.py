@@ -34,6 +34,8 @@ IMAGE_PATH_MAX_LENGTH = 100
 
 USERNAME_KEY = "username"
 PASSWORD_KEY = "password"
+USER_KEY = "user"
+TOKEN_KEY = "token"
 
 TASK_TABLE_NAME = "tasks"
 TASK_NAME_MAX_LENGTH = 30
