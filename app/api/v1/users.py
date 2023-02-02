@@ -16,6 +16,7 @@ from app.constants import (
 from app.schemas import (
     RegisterRequestUser,
     LoginRequestUser,
+    LoginResultUser,
 )
 from app.controllers import (
     UserController,
@@ -45,6 +46,7 @@ def register_new_user(register_request_infor: RegisterRequestUser, session: Sess
 @router.post(
     USER_LOGIN_ROUTE,
     status_code=HTTP_200_OK,
+    response_model=LoginResultUser,
 )
 def login(user: LoginRequestUser, session: Session = Depends(get_session)):
     user_controller = UserController(session) 
