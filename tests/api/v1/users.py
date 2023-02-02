@@ -10,6 +10,7 @@ from app.constants import (
     HTTP_200_OK,
     HTTP_409_CONFLICT,
     USERNAME_EXISTS_MESSAGE,
+    USER_LOGIN_FULL_ROUTE,
 )
 from app.utils.database import (
     clear_database,
@@ -23,6 +24,7 @@ from tests.constants import (
     ERROR_RESPONSE_DETAIL_KEY,
 )
 from tests.database import get_testing_session
+from tests.utils import createFirstUserBy
 
 
 class UserEndToEndTest(unittest.TestCase):
@@ -61,3 +63,16 @@ class UserEndToEndTest(unittest.TestCase):
 
         assert response.status_code == HTTP_409_CONFLICT
         assert response.json()[ERROR_RESPONSE_DETAIL_KEY] == USERNAME_EXISTS_MESSAGE
+
+    def test_login_with_valid_username_and_password(self):
+        createFirstUserBy(self.user_controller)
+
+        response = self.test_client.post(
+            USER_LOGIN_FULL_ROUTE,
+            json={
+                USERNAME_KEY: FIRST_USER_USERNAME,
+                PASSWORD_KEY: FIRST_USER_PASSWORD,
+            }
+        )
+
+        assert response.status_code == HTTP_200_OK
