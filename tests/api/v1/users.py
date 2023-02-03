@@ -27,6 +27,10 @@ from constants.database.user import (
     USER_KEY,
     TOKEN_KEY,
     USER_DESCRIPTION_KEY,
+    USERID_KEY,
+)
+from constants.database import (
+    AUTHORIZATION_KEY,
 )
 from constants.message import (
     USERNAME_EXISTS_MESSAGE,
@@ -34,6 +38,7 @@ from constants.message import (
     PASSWORD_IS_INCORRECT_MESSAGE,
 )
 from constants.test.user import (
+    FIRST_USER_USERID,
     FIRST_USER_USERNAME,
     FIRST_USER_PASSWORD,
     FIRST_USER_WRONG_USERNAME,
@@ -139,7 +144,8 @@ class UserEndToEndTest(unittest.TestCase):
         response = self.test_client.post(
             USER_CHANGE_DESCRIPION_FULL_ROUTE,
             headers={
-                "authorization": f"Bearer {response.json()[TOKEN_KEY]}"
+                AUTHORIZATION_KEY: f"Bearer {response.json()[TOKEN_KEY]}",
+                USERID_KEY: str(FIRST_USER_USERID),        
             },
             json={
                 USER_DESCRIPTION_KEY: FIRST_USER_NEW_USER_DESCRIPTION,

@@ -2,7 +2,10 @@ import jwt
 import datetime
 from fastapi import (
     HTTPException,
+    Header,
+    Depends,
 )
+from sqlalchemy.orm import Session
 
 from constants.utils.auth import (
     EXPIRED_TIME_KEY,
@@ -16,6 +19,8 @@ from constants.message import (
     TOKEN_IS_EXPIRED_MESSAGE,
     TOKEN_IS_NOT_VALID_MESSAGE,
 )
+from databases.base import get_session
+from databases.models.User import User
 
 
 
@@ -28,8 +33,16 @@ def generate_token(data: dict,
 
 def verify_token(token: str, password: str, algorithm: str = ALGORITHM):
     try: 
-        return jwt.decode(token, password, algorithm)
+        return jwt.decode(token.split()[1], password, algorithm)
     except jwt.exceptions.ExpiredSignatureError:
         raise HTTPException(status_code=HTTP_401_UNAUTHORIZED, detail=TOKEN_IS_EXPIRED_MESSAGE)
     except jwt.exceptions.InvalidTokenError:
         raise HTTPException(status_code=HTTP_401_UNAUTHORIZED, detail=TOKEN_IS_NOT_VALID_MESSAGE)
+
+
+def get_token(authorization: str = Header(), 
+                userId: int = Header(), 
+                session: Session = Depends(get_session)):
+
+    user = session.query(User).filter(User.userId == userId).first()
+    return verify_token(authorization, user.password)

@@ -1,6 +1,7 @@
 from fastapi import (
     APIRouter,
     Depends,
+    Body,
 )
 from sqlalchemy.orm import Session
 
@@ -17,6 +18,7 @@ from constants.routes import (
     USER_BASE_ROUTE,
     USER_REGISTER_ROUTE,
     USER_LOGIN_ROUTE,
+    USER_CHANGE_DESCRIPTION_ROUTE,
 )
 from app.schemas import (
     RegisterRequestUser,
@@ -29,7 +31,10 @@ from app.controllers import (
 from app.utils.api import (
     handleStatus,
 )
-from app.utils.auth import generate_token
+from app.utils.auth import (
+    generate_token,
+    get_token,
+)
 from databases.base import get_session
 
 
@@ -68,3 +73,17 @@ def login(user: LoginRequestUser, session: Session = Depends(get_session)):
             USERNAME_KEY: user.username,
         }, user.password)
     }
+
+@router.post(
+    USER_CHANGE_DESCRIPTION_ROUTE,
+    status_code=HTTP_200_OK,
+) 
+def change_description(description: dict = Body(), 
+                        session = Depends(get_session),
+                        data: dict = Depends(get_token)):
+    user_controller = UserController(session)
+
+    status, response = user_controller.change_description_by_username(username=data["username"], 
+                                                                        description=description["description"])
+
+    return response
