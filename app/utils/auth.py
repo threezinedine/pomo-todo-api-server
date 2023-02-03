@@ -33,7 +33,7 @@ def generate_token(data: dict,
 
 def verify_token(token: str, password: str, algorithm: str = ALGORITHM):
     try: 
-        return jwt.decode(token.split()[1], password, algorithm)
+        return jwt.decode(token, password, algorithm)
     except jwt.exceptions.ExpiredSignatureError:
         raise HTTPException(status_code=HTTP_401_UNAUTHORIZED, detail=TOKEN_IS_EXPIRED_MESSAGE)
     except jwt.exceptions.InvalidTokenError:
