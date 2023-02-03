@@ -1,4 +1,5 @@
 import unittest
+from fastapi import UploadFile
 from fastapi.testclient import TestClient
 
 from databases.base import get_session
@@ -85,8 +86,8 @@ class UserEndToEndTest(unittest.TestCase):
         assert response.json() is None
 
     def test_register_with_existed_username_feature(self):
-        self.user_controller.create_new_user(username=FIRST_USER_USERNAME, 
-                                                password=FIRST_USER_PASSWORD)
+        self.user_controller.create_new_user(username=FIRST_USER_USERNAME,
+                                             password=FIRST_USER_PASSWORD)
 
         response = test_client.post(
             USER_REGISTER_FULL_ROUTE,
@@ -97,7 +98,8 @@ class UserEndToEndTest(unittest.TestCase):
         )
 
         assert response.status_code == HTTP_409_CONFLICT
-        assert response.json()[ERROR_RESPONSE_DETAIL_KEY] == USERNAME_EXISTS_MESSAGE
+        assert response.json()[
+            ERROR_RESPONSE_DETAIL_KEY] == USERNAME_EXISTS_MESSAGE
 
     def test_login_with_valid_username_and_password(self):
         createFirstUserBy(self.user_controller)
@@ -129,7 +131,8 @@ class UserEndToEndTest(unittest.TestCase):
         )
 
         assert response.status_code == HTTP_404_NOT_FOUND
-        assert response.json()[ERROR_RESPONSE_DETAIL_KEY] == USERNAME_DOES_NOT_EXIST_MESSAGE
+        assert response.json()[
+            ERROR_RESPONSE_DETAIL_KEY] == USERNAME_DOES_NOT_EXIST_MESSAGE
 
     def test_login_user_with_existed_username_and_non_match_password(self):
         createFirstUserBy(self.user_controller)
@@ -143,7 +146,8 @@ class UserEndToEndTest(unittest.TestCase):
         )
 
         assert response.status_code == HTTP_401_UNAUTHORIZED
-        assert response.json()[ERROR_RESPONSE_DETAIL_KEY] == PASSWORD_IS_INCORRECT_MESSAGE
+        assert response.json()[
+            ERROR_RESPONSE_DETAIL_KEY] == PASSWORD_IS_INCORRECT_MESSAGE
 
     def test_the_update_user_description_successfully(self):
         createFirstUserBy(self.user_controller)
@@ -153,7 +157,7 @@ class UserEndToEndTest(unittest.TestCase):
             USER_CHANGE_DESCRIPION_FULL_ROUTE,
             headers={
                 AUTHORIZATION_KEY: token,
-                USERID_KEY: str(FIRST_USER_USERID),        
+                USERID_KEY: str(FIRST_USER_USERID),
             },
             json={
                 USER_DESCRIPTION_KEY: FIRST_USER_NEW_USER_DESCRIPTION,
@@ -169,12 +173,12 @@ class UserEndToEndTest(unittest.TestCase):
 
     def test_change_user_description_with_invalid_token(self):
         createFirstUserBy(self.user_controller)
-        
+
         response = test_client.post(
             USER_CHANGE_DESCRIPION_FULL_ROUTE,
             headers={
                 AUTHORIZATION_KEY: FIRST_USER_WRONG_TOKEN,
-                USERID_KEY: str(FIRST_USER_USERID),        
+                USERID_KEY: str(FIRST_USER_USERID),
             },
             json={
                 USER_DESCRIPTION_KEY: FIRST_USER_NEW_USER_DESCRIPTION,
@@ -182,7 +186,8 @@ class UserEndToEndTest(unittest.TestCase):
         )
 
         assert response.status_code == HTTP_401_UNAUTHORIZED
-        assert response.json()[ERROR_RESPONSE_DETAIL_KEY] == TOKEN_IS_NOT_VALID_MESSAGE
+        assert response.json()[
+            ERROR_RESPONSE_DETAIL_KEY] == TOKEN_IS_NOT_VALID_MESSAGE
 
     def test_change_user_description_with_not_match_userId(self):
         createFirstUserBy(self.user_controller)
@@ -192,7 +197,7 @@ class UserEndToEndTest(unittest.TestCase):
             USER_CHANGE_DESCRIPION_FULL_ROUTE,
             headers={
                 AUTHORIZATION_KEY: token,
-                USERID_KEY: str(FIRST_USER_WRONG_USERID),        
+                USERID_KEY: str(FIRST_USER_WRONG_USERID),
             },
             json={
                 USER_DESCRIPTION_KEY: FIRST_USER_NEW_USER_DESCRIPTION,
@@ -200,7 +205,8 @@ class UserEndToEndTest(unittest.TestCase):
         )
 
         assert response.status_code == HTTP_401_UNAUTHORIZED
-        assert response.json()[ERROR_RESPONSE_DETAIL_KEY] == USERID_DOES_NOT_EXIST_MESSAGE
+        assert response.json()[
+            ERROR_RESPONSE_DETAIL_KEY] == USERID_DOES_NOT_EXIST_MESSAGE
 
     def test_user_uploading_the_user_image_succesfully(self):
         createFirstUserBy(self.user_controller)
@@ -209,20 +215,22 @@ class UserEndToEndTest(unittest.TestCase):
         with open(FIRST_USER_TEST_IMAGE_PATH, "rb") as file:
             file_data = file.read()
 
+        userImage = (FIRST_USER_TEST_IMAGE_NAME, file_data, "image/png")
+
         response = test_client.post(
             USER_UPLOAD_IMAGE_FULL_ROUTE,
             headers={
                 AUTHORIZATION_KEY: token,
-                USERID_KEY: str(FIRST_USER_WRONG_USERID),        
+                USERID_KEY: str(FIRST_USER_USERID),
             },
-            data={
-                USER_IMAGE_KEY: (FIRST_USER_TEST_IMAGE_NAME, file_data, "image/png")
+            files={
+                "userImage": userImage,
             }
         )
 
+        print(response.json(), response.status_code)
         assert response.status_code == HTTP_200_OK
         assertDictSubset(response.json(), {
             USERNAME_KEY: FIRST_USER_USERNAME,
             USER_DESCRIPTION_KEY: None
         })
-    

@@ -13,4 +13,4 @@ USER_DESCRIPTION_KEY = "description"
 USER_USERID_KEY = "userId"
 USER_IMAGE_KEY = 'userImage'
 
-IMAGE_FOLDER = "/images"
+IMAGE_FOLDER = "images"

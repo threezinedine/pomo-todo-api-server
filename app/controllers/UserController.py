@@ -111,7 +111,6 @@ class UserController:
         return OK_STATUS, user
 
     def change_user_image_path_by_username(self, username: str, imagePath: str):
-        # need to refactor for removing the duplication
         user = self.session.query(User).filter(
             User.username == username).first()
 
