@@ -37,7 +37,7 @@ from constants.message import (
     USERNAME_DOES_NOT_EXIST_MESSAGE,
     PASSWORD_IS_INCORRECT_MESSAGE,
     TOKEN_IS_NOT_VALID_MESSAGE,
-    USERID_DOES_NOT_MATCH,
+    USERID_DOES_NOT_EXIST_MESSAGE,
 )
 from constants.test.user import (
     FIRST_USER_USERID,
@@ -196,4 +196,4 @@ class UserEndToEndTest(unittest.TestCase):
         )
 
         assert response.status_code == HTTP_401_UNAUTHORIZED
-        assert response.json()[USER_DESCRIPTION_KEY] == USERID_DOES_NOT_MATCH
+        assert response.json()[ERROR_RESPONSE_DETAIL_KEY] == USERID_DOES_NOT_EXIST_MESSAGE

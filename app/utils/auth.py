@@ -18,6 +18,7 @@ from constants import (
 from constants.message import (
     TOKEN_IS_EXPIRED_MESSAGE,
     TOKEN_IS_NOT_VALID_MESSAGE,
+    USERID_DOES_NOT_EXIST_MESSAGE,
 )
 from databases.base import get_session
 from databases.models.User import User
@@ -45,4 +46,9 @@ def get_token(authorization: str = Header(),
                 session: Session = Depends(get_session)):
 
     user = session.query(User).filter(User.userId == userId).first()
+    if user is None:
+        raise HTTPException(
+            status_code=HTTP_401_UNAUTHORIZED,
+            detail=USERID_DOES_NOT_EXIST_MESSAGE
+        )
     return verify_token(authorization, user.password)
