@@ -36,6 +36,7 @@ from constants.message import (
     USERNAME_EXISTS_MESSAGE,
     USERNAME_DOES_NOT_EXIST_MESSAGE,
     PASSWORD_IS_INCORRECT_MESSAGE,
+    TOKEN_IS_NOT_VALID_MESSAGE,
 )
 from constants.test.user import (
     FIRST_USER_USERID,
@@ -44,6 +45,7 @@ from constants.test.user import (
     FIRST_USER_WRONG_USERNAME,
     FIRST_USER_WRONG_PASSWORD,
     FIRST_USER_NEW_USER_DESCRIPTION,
+    FIRST_USER_WRONG_TOKEN,
 )
 from tests.database import get_testing_session
 from tests.utils import (
@@ -158,3 +160,20 @@ class UserEndToEndTest(unittest.TestCase):
             USERNAME_KEY: FIRST_USER_USERNAME,
             USER_DESCRIPTION_KEY: FIRST_USER_NEW_USER_DESCRIPTION,
         })
+
+    def test_change_user_description_with_invalid_token(self):
+        createFirstUserBy(self.user_controller)
+        
+        response = test_client.post(
+            USER_CHANGE_DESCRIPION_FULL_ROUTE,
+            headers={
+                AUTHORIZATION_KEY: FIRST_USER_WRONG_TOKEN,
+                USERID_KEY: str(FIRST_USER_USERID),        
+            },
+            json={
+                USER_DESCRIPTION_KEY: FIRST_USER_NEW_USER_DESCRIPTION,
+            }
+        )
+
+        assert response.status_code == HTTP_401_UNAUTHORIZED
+        assert response.json()[ERROR_RESPONSE_DETAIL_KEY] == TOKEN_IS_NOT_VALID_MESSAGE
