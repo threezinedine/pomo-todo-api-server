@@ -4,7 +4,7 @@ from constants import (
     DETAIL_MESSAGE_KEY,
 )
 
-from tests.constants import (
+from constants.test.user import (
     FIRST_USER_USERNAME,
     FIRST_USER_PASSWORD,
 )

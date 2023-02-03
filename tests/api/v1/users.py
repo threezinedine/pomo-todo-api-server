@@ -3,11 +3,18 @@ from fastapi.testclient import TestClient
 
 from databases.base import get_session
 from main import app
+from app.utils.database import (
+    clear_database,
+)
+from app.controllers import (
+    UserController,
+)
 from constants import (
     HTTP_200_OK,
     HTTP_401_UNAUTHORIZED,
     HTTP_404_NOT_FOUND,
     HTTP_409_CONFLICT,
+    ERROR_RESPONSE_DETAIL_KEY,
 )
 from constants.routes import (
     USER_REGISTER_FULL_ROUTE,
@@ -24,18 +31,11 @@ from constants.message import (
     USERNAME_DOES_NOT_EXIST_MESSAGE,
     PASSWORD_IS_INCORRECT_MESSAGE,
 )
-from app.utils.database import (
-    clear_database,
-)
-from app.controllers import (
-    UserController,
-)
-from tests.constants import (
+from constants.test.user import (
     FIRST_USER_USERNAME,
     FIRST_USER_PASSWORD,
     FIRST_USER_WRONG_USERNAME,
     FIRST_USER_WRONG_PASSWORD,
-    ERROR_RESPONSE_DETAIL_KEY,
 )
 from tests.database import get_testing_session
 from tests.utils import createFirstUserBy

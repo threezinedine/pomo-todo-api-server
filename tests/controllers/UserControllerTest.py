@@ -27,7 +27,7 @@ from tests.utils import (
     assertUserWithDict,
     createFirstUserBy,
 )
-from tests.constants import (
+from constants.test.user import (
     FIRST_USER_USERNAME,
     FIRST_USER_PASSWORD,
     FIRST_USER_WRONG_PASSWORD,
