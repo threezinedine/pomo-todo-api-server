@@ -19,12 +19,14 @@ from constants import (
 from constants.routes import (
     USER_REGISTER_FULL_ROUTE,
     USER_LOGIN_FULL_ROUTE,
+    USER_CHANGE_DESCRIPION_FULL_ROUTE,
 )
 from constants.database.user import (
     USERNAME_KEY,
     PASSWORD_KEY,
     USER_KEY,
     TOKEN_KEY,
+    USER_DESCRIPTION_KEY,
 )
 from constants.message import (
     USERNAME_EXISTS_MESSAGE,
@@ -36,6 +38,7 @@ from constants.test.user import (
     FIRST_USER_PASSWORD,
     FIRST_USER_WRONG_USERNAME,
     FIRST_USER_WRONG_PASSWORD,
+    FIRST_USER_NEW_USER_DESCRIPTION,
 )
 from tests.database import get_testing_session
 from tests.utils import createFirstUserBy
@@ -121,3 +124,30 @@ class UserEndToEndTest(unittest.TestCase):
 
         assert response.status_code == HTTP_401_UNAUTHORIZED
         assert response.json()[ERROR_RESPONSE_DETAIL_KEY] == PASSWORD_IS_INCORRECT_MESSAGE
+
+    def test_the_update_user_description_successfully(self):
+        createFirstUserBy(self.user_controller)
+
+        response = self.test_client.post(
+            USER_LOGIN_FULL_ROUTE,
+            json={
+                USERNAME_KEY: FIRST_USER_USERNAME,
+                PASSWORD_KEY: FIRST_USER_PASSWORD,
+            }
+        )
+
+        response = self.test_client.post(
+            USER_CHANGE_DESCRIPION_FULL_ROUTE,
+            headers={
+                "authorization": f"Bearer {response.json()[TOKEN_KEY]}"
+            },
+            json={
+                USER_DESCRIPTION_KEY: FIRST_USER_NEW_USER_DESCRIPTION,
+            }
+        )
+
+        assert response.status_code == HTTP_200_OK
+        self.assertDictContainsSubset(response.json(), {
+            USERNAME_KEY: FIRST_USER_USERNAME,
+            USER_DESCRIPTION_KEY: FIRST_USER_NEW_USER_DESCRIPTION,
+        })
