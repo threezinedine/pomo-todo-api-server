@@ -9,6 +9,8 @@ from constants import (
 )
 from constants.database.user import (
     USER_KEY,
+    USERNAME_KEY,
+    USERID_KEY,
     TOKEN_KEY,
 )
 from constants.routes import (
@@ -27,6 +29,7 @@ from app.controllers import (
 from app.utils.api import (
     handleStatus,
 )
+from app.utils.auth import generate_token
 from databases.base import get_session
 
 
@@ -60,5 +63,8 @@ def login(user: LoginRequestUser, session: Session = Depends(get_session)):
 
     return {
         USER_KEY: user,
-        TOKEN_KEY: "testing_token",
+        TOKEN_KEY: generate_token({
+            USERID_KEY: user.userId,
+            USERNAME_KEY: user.username,
+        }, user.password)
     }

@@ -4,21 +4,32 @@ from fastapi import (
     HTTPException,
 )
 
+from constants.utils.auth import (
+    EXPIRED_TIME_KEY,
+    DEFAULT_EXPIRED_TIME,
+    ALGORITHM,
+)
+from constants import (
+    HTTP_401_UNAUTHORIZED,
+)
+from constants.message import (
+    TOKEN_IS_EXPIRED_MESSAGE,
+    TOKEN_IS_NOT_VALID_MESSAGE,
+)
 
-secret_key = "testing_secret_key"
-algorithm = 'HS256'
-DEFAULT_EXPIRED_TIME = datetime.timedelta(hours=1)
-EXPIRED_TIME_KEY = "exp"
+
 
 def generate_token(data: dict, 
                         password: str, 
-                        algorithm: str = algorithm,
+                        algorithm: str = ALGORITHM,
                         exp_time: datetime.timedelta = DEFAULT_EXPIRED_TIME):
     data[EXPIRED_TIME_KEY] = datetime.datetime.utcnow() + exp_time
     return jwt.encode(data, password, algorithm)
 
-def verify_token(token: str, password: str, algorithm: str = algorithm):
+def verify_token(token: str, password: str, algorithm: str = ALGORITHM):
     try: 
-        decoded_data = jwt.decode(token, password, algorithm)
-    except jwt.exceptions.InvalidSignatureError:
-        raise HTTPException(status_code=404, detail=)
+        return jwt.decode(token, password, algorithm)
+    except jwt.exceptions.ExpiredSignatureError:
+        raise HTTPException(status_code=HTTP_401_UNAUTHORIZED, detail=TOKEN_IS_EXPIRED_MESSAGE)
+    except jwt.exceptions.InvalidTokenError:
+        raise HTTPException(status_code=HTTP_401_UNAUTHORIZED, detail=TOKEN_IS_NOT_VALID_MESSAGE)
