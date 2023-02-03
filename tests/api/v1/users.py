@@ -62,6 +62,7 @@ class UserEndToEndTest(unittest.TestCase):
         )
 
         assert response.status_code == HTTP_200_OK
+        assert response.json() is None
 
     def test_register_with_existed_username_feature(self):
         self.user_controller.create_new_user(username=FIRST_USER_USERNAME, 
