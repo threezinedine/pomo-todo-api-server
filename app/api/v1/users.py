@@ -44,7 +44,7 @@ def register_new_user(register_request_infor: RegisterRequestUser, session: Sess
 
     handleStatus(status)
 
-    return user
+    return None
 
 @router.post(
     USER_LOGIN_ROUTE,
