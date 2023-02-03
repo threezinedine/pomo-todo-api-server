@@ -20,6 +20,7 @@ from constants.routes import (
     USER_REGISTER_FULL_ROUTE,
     USER_LOGIN_FULL_ROUTE,
     USER_CHANGE_DESCRIPION_FULL_ROUTE,
+    USER_UPLOAD_IMAGE_FULL_ROUTE,
 )
 from constants.database.user import (
     USERNAME_KEY,
@@ -28,6 +29,7 @@ from constants.database.user import (
     TOKEN_KEY,
     USER_DESCRIPTION_KEY,
     USERID_KEY,
+    USER_IMAGE_KEY,
 )
 from constants.database import (
     AUTHORIZATION_KEY,
@@ -48,6 +50,8 @@ from constants.test.user import (
     FIRST_USER_NEW_USER_DESCRIPTION,
     FIRST_USER_WRONG_TOKEN,
     FIRST_USER_WRONG_USERID,
+    FIRST_USER_TEST_IMAGE_PATH,
+    FIRST_USER_TEST_IMAGE_NAME,
 )
 from tests.database import get_testing_session
 from tests.utils import (
@@ -197,3 +201,28 @@ class UserEndToEndTest(unittest.TestCase):
 
         assert response.status_code == HTTP_401_UNAUTHORIZED
         assert response.json()[ERROR_RESPONSE_DETAIL_KEY] == USERID_DOES_NOT_EXIST_MESSAGE
+
+    def test_user_uploading_the_user_image_succesfully(self):
+        createFirstUserBy(self.user_controller)
+        token = getFirstUserTokenBy(self.user_controller)
+
+        with open(FIRST_USER_TEST_IMAGE_PATH, "rb") as file:
+            file_data = file.read()
+
+        response = test_client.post(
+            USER_UPLOAD_IMAGE_FULL_ROUTE,
+            headers={
+                AUTHORIZATION_KEY: token,
+                USERID_KEY: str(FIRST_USER_WRONG_USERID),        
+            },
+            data={
+                USER_IMAGE_KEY: (FIRST_USER_TEST_IMAGE_NAME, file_data, "image/png")
+            }
+        )
+
+        assert response.status_code == HTTP_200_OK
+        assertDictSubset(response.json(), {
+            USERNAME_KEY: FIRST_USER_USERNAME,
+            USER_DESCRIPTION_KEY: None
+        })
+    
