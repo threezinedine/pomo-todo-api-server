@@ -141,7 +141,7 @@ class UserControllerTest(unittest.TestCase):
         status, response = self.user_controller.change_user_image_path_by_username(username=FIRST_USER_USERNAME,
                                                                                    imagePath=image_path)
 
-        assertStatus(HTTP_200_OK)
+        assertStatus(status, HTTP_200_OK)
         assertUserWithDict(response,
                            username=FIRST_USER_USERNAME,
                            password=FIRST_USER_PASSWORD,

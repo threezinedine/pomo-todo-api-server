@@ -20,6 +20,7 @@ class UserController:
         session: Session
             The database session which can handle inside
     """
+
     def __init__(self, session: Session):
         self.session = session
 
@@ -59,11 +60,12 @@ class UserController:
         """
         new_user = None
         status = USERNAME_EXIST_STATUS
-        user = self.session.query(User).filter(User.username == username).first()
+        user = self.session.query(User).filter(
+            User.username == username).first()
 
         if user is None:
             new_user = User(username=username, password=password)
-            status = OK_STATUS 
+            status = OK_STATUS
             self.session.add(new_user)
             self.session.commit()
 
@@ -89,7 +91,8 @@ class UserController:
                 The user which is created
         """
         status = OK_STATUS
-        user = self.session.query(User).filter(User.username == username).first()
+        user = self.session.query(User).filter(
+            User.username == username).first()
 
         if user is None:
             status = USERNAME_DOES_NOT_EXIST_STATUS
@@ -101,7 +104,18 @@ class UserController:
         return status, user
 
     def change_description_by_username(self, username: str, description: str):
-        user = self.session.query(User).filter(User.username == username).first()
+        user = self.session.query(User).filter(
+            User.username == username).first()
         user.description = description
         self.session.commit()
+        return OK_STATUS, user
+
+    def change_user_image_path_by_username(self, username: str, imagePath: str):
+        # need to refactor for removing the duplication
+        user = self.session.query(User).filter(
+            User.username == username).first()
+
+        user.imagePath = imagePath
+        self.session.commit()
+
         return OK_STATUS, user
