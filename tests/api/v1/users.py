@@ -103,7 +103,10 @@ class UserEndToEndTest(unittest.TestCase):
         )
 
         assert response.status_code == HTTP_200_OK
-        assert response.json()[USER_KEY] is not None
+        assertDictSubset(response.json()[USER_KEY], {
+            USERNAME_KEY: FIRST_USER_USERNAME,
+            USER_DESCRIPTION_KEY: None
+        })
         assert response.json()[TOKEN_KEY] is not None
 
     def test_login_user_non_existed_username(self):
