@@ -31,6 +31,7 @@ from constants.test.user import (
     FIRST_USER_USERNAME,
     FIRST_USER_PASSWORD,
     FIRST_USER_WRONG_PASSWORD,
+    FIRST_USER_NEW_USER_DESCRIPTION,
 )
 from tests.database import get_testing_session
 
@@ -113,3 +114,15 @@ class UserControllerTest(unittest.TestCase):
 
         assertStatus(status, HTTP_401_UNAUTHORIZED, PASSWORD_IS_INCORRECT_MESSAGE)
         assert response is None
+
+    def test_given_a_user_is_created_when_change_the_description_by_valid_username_then_return_HTTP_200_OK_and_that_user(self):
+        createFirstUserBy(self.user_controller)
+
+        status, response = self.user_controller.change_description_by_username(username=FIRST_USER_USERNAME,
+                                                                                    description=FIRST_USER_NEW_USER_DESCRIPTION)
+
+        assertStatus(status, HTTP_200_OK)
+        assertUserWithDict(response, 
+                    username=FIRST_USER_USERNAME,
+                    password=FIRST_USER_PASSWORD,
+                    description=FIRST_USER_NEW_USER_DESCRIPTION)
