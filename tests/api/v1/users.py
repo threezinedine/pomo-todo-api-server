@@ -46,7 +46,10 @@ from constants.test.user import (
     FIRST_USER_NEW_USER_DESCRIPTION,
 )
 from tests.database import get_testing_session
-from tests.utils import createFirstUserBy
+from tests.utils import (
+    createFirstUserBy,
+    assertDictSubset,
+)
 
 
 class UserEndToEndTest(unittest.TestCase):
@@ -153,7 +156,8 @@ class UserEndToEndTest(unittest.TestCase):
         )
 
         assert response.status_code == HTTP_200_OK
-        self.assertDictContainsSubset(response.json(), {
+
+        assertDictSubset(response.json(), {
             USERNAME_KEY: FIRST_USER_USERNAME,
             USER_DESCRIPTION_KEY: FIRST_USER_NEW_USER_DESCRIPTION,
         })

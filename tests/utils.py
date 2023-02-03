@@ -10,6 +10,10 @@ from constants.test.user import (
 from app.controllers.UserController import UserController
 
 
+def assertDictSubset(dictionary: dict, subsetDictionary: dict):
+    for key, value in subsetDictionary.items():
+        assert dictionary[key] == value 
+
 def assertStatus(status, status_code=HTTP_200_OK, detail_message=None):
     assert status[STATUS_CODE_KEY] == status_code
     assert status[DETAIL_MESSAGE_KEY] == detail_message

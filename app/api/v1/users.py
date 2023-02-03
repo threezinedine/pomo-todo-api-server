@@ -24,6 +24,7 @@ from app.schemas import (
     RegisterRequestUser,
     LoginRequestUser,
     LoginResultUser,
+    ResponseUser,
 )
 from app.controllers import (
     UserController,
@@ -77,6 +78,7 @@ def login(user: LoginRequestUser, session: Session = Depends(get_session)):
 @router.post(
     USER_CHANGE_DESCRIPTION_ROUTE,
     status_code=HTTP_200_OK,
+    response_model=ResponseUser,
 ) 
 def change_description(description: dict = Body(), 
                         session = Depends(get_session),
