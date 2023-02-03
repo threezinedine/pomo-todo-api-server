@@ -85,7 +85,7 @@ def change_description(description: dict = Body(),
                         data: dict = Depends(get_token)):
     user_controller = UserController(session)
 
-    status, response = user_controller.change_description_by_username(username=data["username"], 
+    _, response = user_controller.change_description_by_username(username=data["username"], 
                                                                         description=description["description"])
 
     return response
