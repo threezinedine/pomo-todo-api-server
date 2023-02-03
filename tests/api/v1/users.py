@@ -141,7 +141,7 @@ class UserEndToEndTest(unittest.TestCase):
         response = test_client.post(
             USER_CHANGE_DESCRIPION_FULL_ROUTE,
             headers={
-                AUTHORIZATION_KEY: f"Bearer {token}",
+                AUTHORIZATION_KEY: token,
                 USERID_KEY: str(FIRST_USER_USERID),        
             },
             json={
