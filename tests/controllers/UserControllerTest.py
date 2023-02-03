@@ -34,6 +34,9 @@ from constants.test.user import (
     FIRST_USER_WRONG_PASSWORD,
     FIRST_USER_NEW_USER_DESCRIPTION,
     FIRST_USER_TEST_IMAGE_PATH,
+    FIRST_USER_FULL_DICT_NO_DESC_NO_IMAG,
+    FIRST_USER_FULL_DICT_DESC_NO_IMAG,
+    FIRST_USER_FULL_DICT_NO_DESC_IMAG,
 )
 from constants.database.user import (
     IMAGE_FOLDER,
@@ -62,28 +65,22 @@ class UserControllerTest(unittest.TestCase):
         status, response = self.user_controller.get_all_users()
         assertStatus(status, HTTP_200_OK)
         assert len(response) == 1
-        assertUserWithDict(response[0],
-                           username=FIRST_USER_USERNAME,
-                           password=FIRST_USER_PASSWORD)
+        assertUserWithDict(response[0], **FIRST_USER_FULL_DICT_NO_DESC_NO_IMAG)
 
     def test_given_no_users_exist_when_create_new_users_then_returns_HTTP_200_OK_and_that_new_user(self):
         status, response = self.user_controller.create_new_user(username=FIRST_USER_USERNAME,
                                                                 password=FIRST_USER_PASSWORD)
 
         assertStatus(status, HTTP_200_OK)
-        assertUserWithDict(response,
-                           username=FIRST_USER_USERNAME,
-                           password=FIRST_USER_PASSWORD)
+        assertUserWithDict(response, **FIRST_USER_FULL_DICT_NO_DESC_NO_IMAG)
 
     def test_given_no_users_exist_when_create_new_users_then_that_user_exist_inside_the_database(self):
-        status, response = self.user_controller.create_new_user(username=FIRST_USER_USERNAME,
-                                                                password=FIRST_USER_PASSWORD)
+        _, _ = self.user_controller.create_new_user(username=FIRST_USER_USERNAME,
+                                                    password=FIRST_USER_PASSWORD)
 
         user = self.session.query(User).filter(
             User.username == FIRST_USER_USERNAME).first()
-        assertUserWithDict(user,
-                           username=FIRST_USER_USERNAME,
-                           password=FIRST_USER_PASSWORD)
+        assertUserWithDict(user, **FIRST_USER_FULL_DICT_NO_DESC_NO_IMAG)
 
     def test_given_a_user_exist_when_create_new_user_then_returns_HTTP_409_CONFLICT_and_None(self):
         createFirstUserBy(self.user_controller)
@@ -101,8 +98,7 @@ class UserControllerTest(unittest.TestCase):
                                                                                   password=FIRST_USER_PASSWORD)
 
         assertStatus(status, HTTP_200_OK)
-        assertUserWithDict(response, username=FIRST_USER_USERNAME,
-                           password=FIRST_USER_PASSWORD)
+        assertUserWithDict(response, **FIRST_USER_FULL_DICT_NO_DESC_NO_IMAG)
 
     def test_given_when_get_a_user_with_non_existed_username_then_return_HTTP_404_NOT_FOUND_and_None(self):
         status, response = self.user_controller.get_user_by_username_and_password(username=FIRST_USER_USERNAME,
@@ -129,21 +125,13 @@ class UserControllerTest(unittest.TestCase):
                                                                                description=FIRST_USER_NEW_USER_DESCRIPTION)
 
         assertStatus(status, HTTP_200_OK)
-        assertUserWithDict(response,
-                           username=FIRST_USER_USERNAME,
-                           password=FIRST_USER_PASSWORD,
-                           description=FIRST_USER_NEW_USER_DESCRIPTION)
+        assertUserWithDict(response, **FIRST_USER_FULL_DICT_DESC_NO_IMAG)
 
     def test_given_a_user_is_created_when_upload_the_description_by_a_valid_file_then_return_the_HTTP_200_OK_and_that_user(self):
         createFirstUserBy(self.user_controller)
-        image_path = os.path.join(IMAGE_FOLDER, FIRST_USER_TEST_IMAGE_PATH)
 
         status, response = self.user_controller.change_user_image_path_by_username(username=FIRST_USER_USERNAME,
-                                                                                   imagePath=image_path)
+                                                                                   imagePath=FIRST_USER_TEST_IMAGE_PATH)
 
         assertStatus(status, HTTP_200_OK)
-        assertUserWithDict(response,
-                           username=FIRST_USER_USERNAME,
-                           password=FIRST_USER_PASSWORD,
-                           description=None,
-                           imagePath=image_path)
+        assertUserWithDict(response, **FIRST_USER_FULL_DICT_NO_DESC_IMAG)

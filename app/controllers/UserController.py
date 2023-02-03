@@ -60,8 +60,7 @@ class UserController:
         """
         new_user = None
         status = USERNAME_EXIST_STATUS
-        user = self.session.query(User).filter(
-            User.username == username).first()
+        user = self._get_user_by_username(username=username)
 
         if user is None:
             new_user = User(username=username, password=password)
@@ -91,8 +90,7 @@ class UserController:
                 The user which is created
         """
         status = OK_STATUS
-        user = self.session.query(User).filter(
-            User.username == username).first()
+        user = self._get_user_by_username(username=username)
 
         if user is None:
             status = USERNAME_DOES_NOT_EXIST_STATUS
@@ -104,17 +102,57 @@ class UserController:
         return status, user
 
     def change_description_by_username(self, username: str, description: str):
-        user = self.session.query(User).filter(
-            User.username == username).first()
+        """
+        Change the description by username
+
+        Parameters
+        ----------
+            username: str
+                The username
+            description: str 
+                The description
+
+        Returns
+        -------
+            status: status_code, detail_message 
+                The result status
+
+            user: User 
+                The user which is modified.
+        """
+        user = self._get_user_by_username(username)
         user.description = description
         self.session.commit()
         return OK_STATUS, user
 
     def change_user_image_path_by_username(self, username: str, imagePath: str):
-        user = self.session.query(User).filter(
-            User.username == username).first()
+        """
+        Change the imagePath by username
 
+        Parameters
+        ----------
+            username: str
+                The username
+            imagePath: str 
+                The imagePath
+
+        Returns
+        -------
+            status: status_code, detail_message 
+                The result status
+
+            user: User 
+                The user which is modified.
+        """
+        user = self._get_user_by_username(username)
         user.imagePath = imagePath
         self.session.commit()
 
         return OK_STATUS, user
+
+    def _get_user_by_username(self, username: str):
+        return self.session.query(User).filter(
+            User.username == username).first()
+
+    def __repr__(self) -> str:
+        return f"<UserController session={self.session} />"

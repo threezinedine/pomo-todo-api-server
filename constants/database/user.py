@@ -9,6 +9,7 @@ PASSWORD_KEY = "password"
 USER_KEY = "user"
 TOKEN_KEY = "token"
 USERID_KEY = "userId"
+IMAGE_PATH_KEY = "imagePath"
 USER_DESCRIPTION_KEY = "description"
 USER_USERID_KEY = "userId"
 USER_IMAGE_KEY = 'userImage'

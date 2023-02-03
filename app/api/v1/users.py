@@ -10,13 +10,15 @@ from sqlalchemy.orm import Session
 
 from constants import (
     HTTP_200_OK,
+    HTTP_201_CREATED,
+    WRITE_BINARY_MODE,
 )
 from constants.database.user import (
     USER_KEY,
     USERNAME_KEY,
     USERID_KEY,
     TOKEN_KEY,
-    IMAGE_FOLDER,
+    USER_DESCRIPTION_KEY,
 )
 from constants.routes import (
     USER_BASE_ROUTE,
@@ -37,6 +39,9 @@ from app.controllers import (
 from app.utils.api import (
     handleStatus,
 )
+from app.utils.database import (
+    create_the_saved_image_path,
+)
 from app.utils.auth import (
     generate_token,
     get_token,
@@ -49,12 +54,12 @@ router = APIRouter(prefix=USER_BASE_ROUTE)
 
 @router.post(
     USER_REGISTER_ROUTE,
-    status_code=HTTP_200_OK
+    status_code=HTTP_201_CREATED
 )
 def register_new_user(register_request_infor: RegisterRequestUser, session: Session = Depends(get_session)):
     user_controller = UserController(session)
 
-    status, user = user_controller.create_new_user(
+    status, _ = user_controller.create_new_user(
         username=register_request_infor.username, password=register_request_infor.password)
 
     handleStatus(status)
@@ -94,8 +99,8 @@ def change_description(description: dict = Body(),
                        data: dict = Depends(get_token)):
     user_controller = UserController(session)
 
-    _, response = user_controller.change_description_by_username(username=data["username"],
-                                                                 description=description["description"])
+    _, response = user_controller.change_description_by_username(username=data[USERNAME_KEY],
+                                                                 description=description[USER_DESCRIPTION_KEY])
 
     return response
 
@@ -110,12 +115,12 @@ async def upload_image(userImage: UploadFile = File(),
                        userInfo: dict = Depends(get_token)):
     user_controller = UserController(session=session)
 
-    file_full_path = os.path.join(IMAGE_FOLDER, f"{userInfo['username']}.png")
-    status, response = user_controller.change_user_image_path_by_username(
-        username=userInfo["username"],
+    file_full_path = create_the_saved_image_path(userInfo[USERNAME_KEY])
+    _, response = user_controller.change_user_image_path_by_username(
+        username=userInfo[USERNAME_KEY],
         imagePath=file_full_path)
 
-    with open(file_full_path, "wb") as f:
+    with open(file_full_path, WRITE_BINARY_MODE) as f:
         f.write(await userImage.read())
 
     return response

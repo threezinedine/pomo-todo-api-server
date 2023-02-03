@@ -12,10 +12,13 @@ from app.controllers import (
 )
 from constants import (
     HTTP_200_OK,
+    HTTP_201_CREATED,
     HTTP_401_UNAUTHORIZED,
     HTTP_404_NOT_FOUND,
     HTTP_409_CONFLICT,
     ERROR_RESPONSE_DETAIL_KEY,
+    READ_BINARY_MODE,
+    IMAGE_PNG_CONTENT_TYPE,
 )
 from constants.routes import (
     USER_REGISTER_FULL_ROUTE,
@@ -53,6 +56,8 @@ from constants.test.user import (
     FIRST_USER_WRONG_USERID,
     FIRST_USER_TEST_IMAGE_PATH,
     FIRST_USER_TEST_IMAGE_NAME,
+    FIRST_USER_DICT_WITH_DESCRIPTION,
+    FIRST_USER_DICT_WITHOUT_DESCRIPTION,
 )
 from tests.database import get_testing_session
 from tests.utils import (
@@ -82,7 +87,7 @@ class UserEndToEndTest(unittest.TestCase):
             }
         )
 
-        assert response.status_code == HTTP_200_OK
+        assert response.status_code == HTTP_201_CREATED
         assert response.json() is None
 
     def test_register_with_existed_username_feature(self):
@@ -113,10 +118,8 @@ class UserEndToEndTest(unittest.TestCase):
         )
 
         assert response.status_code == HTTP_200_OK
-        assertDictSubset(response.json()[USER_KEY], {
-            USERNAME_KEY: FIRST_USER_USERNAME,
-            USER_DESCRIPTION_KEY: None
-        })
+        assertDictSubset(
+            response.json()[USER_KEY], FIRST_USER_DICT_WITHOUT_DESCRIPTION)
         assert response.json()[TOKEN_KEY] is not None
 
     def test_login_user_non_existed_username(self):
@@ -166,10 +169,7 @@ class UserEndToEndTest(unittest.TestCase):
 
         assert response.status_code == HTTP_200_OK
 
-        assertDictSubset(response.json(), {
-            USERNAME_KEY: FIRST_USER_USERNAME,
-            USER_DESCRIPTION_KEY: FIRST_USER_NEW_USER_DESCRIPTION,
-        })
+        assertDictSubset(response.json(), FIRST_USER_DICT_WITH_DESCRIPTION)
 
     def test_change_user_description_with_invalid_token(self):
         createFirstUserBy(self.user_controller)
@@ -212,10 +212,11 @@ class UserEndToEndTest(unittest.TestCase):
         createFirstUserBy(self.user_controller)
         token = getFirstUserTokenBy(self.user_controller)
 
-        with open(FIRST_USER_TEST_IMAGE_PATH, "rb") as file:
+        with open(FIRST_USER_TEST_IMAGE_PATH, READ_BINARY_MODE) as file:
             file_data = file.read()
 
-        userImage = (FIRST_USER_TEST_IMAGE_NAME, file_data, "image/png")
+        userImage = (FIRST_USER_TEST_IMAGE_NAME,
+                     file_data, IMAGE_PNG_CONTENT_TYPE)
 
         response = test_client.post(
             USER_UPLOAD_IMAGE_FULL_ROUTE,
@@ -224,13 +225,10 @@ class UserEndToEndTest(unittest.TestCase):
                 USERID_KEY: str(FIRST_USER_USERID),
             },
             files={
-                "userImage": userImage,
+                USER_IMAGE_KEY: userImage,
             }
         )
 
         print(response.json(), response.status_code)
         assert response.status_code == HTTP_200_OK
-        assertDictSubset(response.json(), {
-            USERNAME_KEY: FIRST_USER_USERNAME,
-            USER_DESCRIPTION_KEY: None
-        })
+        assertDictSubset(response.json(), FIRST_USER_DICT_WITHOUT_DESCRIPTION)
