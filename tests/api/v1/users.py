@@ -49,14 +49,15 @@ from tests.database import get_testing_session
 from tests.utils import (
     createFirstUserBy,
     assertDictSubset,
+    getFirstUserTokenBy,
 )
+from tests import test_client
 
 
 class UserEndToEndTest(unittest.TestCase):
     def setUp(self):
         self.session = next(get_testing_session())
         app.dependency_overrides[get_session] = get_testing_session
-        self.test_client = TestClient(app)
         self.user_controller = UserController(self.session)
 
     def tearDown(self):
@@ -64,7 +65,7 @@ class UserEndToEndTest(unittest.TestCase):
         self.session.close()
 
     def test_register_successfully_feature(self):
-        response = self.test_client.post(
+        response = test_client.post(
             USER_REGISTER_FULL_ROUTE,
             json={
                 USERNAME_KEY: FIRST_USER_USERNAME,
@@ -79,7 +80,7 @@ class UserEndToEndTest(unittest.TestCase):
         self.user_controller.create_new_user(username=FIRST_USER_USERNAME, 
                                                 password=FIRST_USER_PASSWORD)
 
-        response = self.test_client.post(
+        response = test_client.post(
             USER_REGISTER_FULL_ROUTE,
             json={
                 USERNAME_KEY: FIRST_USER_USERNAME,
@@ -93,7 +94,7 @@ class UserEndToEndTest(unittest.TestCase):
     def test_login_with_valid_username_and_password(self):
         createFirstUserBy(self.user_controller)
 
-        response = self.test_client.post(
+        response = test_client.post(
             USER_LOGIN_FULL_ROUTE,
             json={
                 USERNAME_KEY: FIRST_USER_USERNAME,
@@ -108,7 +109,7 @@ class UserEndToEndTest(unittest.TestCase):
     def test_login_user_non_existed_username(self):
         createFirstUserBy(self.user_controller)
 
-        response = self.test_client.post(
+        response = test_client.post(
             USER_LOGIN_FULL_ROUTE,
             json={
                 USERNAME_KEY: FIRST_USER_WRONG_USERNAME,
@@ -122,7 +123,7 @@ class UserEndToEndTest(unittest.TestCase):
     def test_login_user_with_existed_username_and_non_match_password(self):
         createFirstUserBy(self.user_controller)
 
-        response = self.test_client.post(
+        response = test_client.post(
             USER_LOGIN_FULL_ROUTE,
             json={
                 USERNAME_KEY: FIRST_USER_USERNAME,
@@ -135,19 +136,12 @@ class UserEndToEndTest(unittest.TestCase):
 
     def test_the_update_user_description_successfully(self):
         createFirstUserBy(self.user_controller)
+        token = getFirstUserTokenBy(self.user_controller)
 
-        response = self.test_client.post(
-            USER_LOGIN_FULL_ROUTE,
-            json={
-                USERNAME_KEY: FIRST_USER_USERNAME,
-                PASSWORD_KEY: FIRST_USER_PASSWORD,
-            }
-        )
-
-        response = self.test_client.post(
+        response = test_client.post(
             USER_CHANGE_DESCRIPION_FULL_ROUTE,
             headers={
-                AUTHORIZATION_KEY: f"Bearer {response.json()[TOKEN_KEY]}",
+                AUTHORIZATION_KEY: f"Bearer {token}",
                 USERID_KEY: str(FIRST_USER_USERID),        
             },
             json={
