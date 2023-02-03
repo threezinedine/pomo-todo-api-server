@@ -1,19 +1,20 @@
 from fastapi import (
     APIRouter,
     Depends,
-    HTTPException,
 )
 from sqlalchemy.orm import Session
 
-from app.constants import (
-    STATUS_CODE_KEY,
-    DETAIL_MESSAGE_KEY,
+from constants import (
     HTTP_200_OK,
+)
+from constants.database.user import (
+    USER_KEY,
+    TOKEN_KEY,
+)
+from constants.routes import (
     USER_BASE_ROUTE,
     USER_REGISTER_ROUTE,
     USER_LOGIN_ROUTE,
-    USER_KEY,
-    TOKEN_KEY,
 )
 from app.schemas import (
     RegisterRequestUser,

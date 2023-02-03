@@ -9,7 +9,7 @@ from sqlalchemy import (
 from datetime import datetime
 
 from databases.base import Base
-from app.constants import (
+from constants.database.task import (
     TASK_TABLE_NAME,
     TASK_NAME_MAX_LENGTH,
     TASK_DESCRIPTION_MAX_LENGTH,

@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 
-from app.constants import (
+from constants.status import (
     OK_STATUS,
     USERNAME_DOES_NOT_EXIST_STATUS,
     USERNAME_EXIST_STATUS,

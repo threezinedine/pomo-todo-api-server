@@ -2,7 +2,7 @@ from fastapi import (
     HTTPException,
 )
 
-from app.constants import (
+from constants import (
     STATUS_CODE_KEY,
     DETAIL_MESSAGE_KEY,
     HTTP_200_OK,

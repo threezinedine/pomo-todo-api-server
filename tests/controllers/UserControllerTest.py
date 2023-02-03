@@ -8,11 +8,13 @@ from databases.models import (
     User,
 )
 from app.controllers import UserController
-from app.constants import (
+from constants import (
     HTTP_200_OK,
     HTTP_401_UNAUTHORIZED,
     HTTP_404_NOT_FOUND,
     HTTP_409_CONFLICT,
+)
+from constants.message import (
     USERNAME_EXISTS_MESSAGE,
     USERNAME_DOES_NOT_EXIST_MESSAGE,
     PASSWORD_IS_INCORRECT_MESSAGE,

@@ -7,7 +7,7 @@ from sqlalchemy.engine import (
 )
 
 from databases.base import Base
-from app.constants import (
+from constants.env import (
     TEST_DATABASE_URI_ENV_VARIABLE_KEY,
     TEST_DATABASE_URI_DEFAULT,
 )

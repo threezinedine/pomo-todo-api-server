@@ -1,4 +1,4 @@
-from app.constants import (
+from constants import (
     HTTP_200_OK,
     STATUS_CODE_KEY,
     DETAIL_MESSAGE_KEY,

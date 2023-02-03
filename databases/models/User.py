@@ -3,7 +3,7 @@ from sqlalchemy import (
     Integer,
     String,
 )
-from app.constants import (
+from constants.database.user import (
     USER_TABLE_NAME,
     USERNAME_MAX_LENGTH,
     PASSWORD_MAX_LENGTH,

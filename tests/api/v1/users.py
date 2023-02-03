@@ -3,20 +3,26 @@ from fastapi.testclient import TestClient
 
 from databases.base import get_session
 from main import app
-from app.constants import (
-    USER_REGISTER_FULL_ROUTE,
-    USERNAME_KEY,
-    PASSWORD_KEY,
-    USER_KEY,
-    TOKEN_KEY,
+from constants import (
     HTTP_200_OK,
     HTTP_401_UNAUTHORIZED,
     HTTP_404_NOT_FOUND,
     HTTP_409_CONFLICT,
+)
+from constants.routes import (
+    USER_REGISTER_FULL_ROUTE,
+    USER_LOGIN_FULL_ROUTE,
+)
+from constants.database.user import (
+    USERNAME_KEY,
+    PASSWORD_KEY,
+    USER_KEY,
+    TOKEN_KEY,
+)
+from constants.message import (
     USERNAME_EXISTS_MESSAGE,
     USERNAME_DOES_NOT_EXIST_MESSAGE,
     PASSWORD_IS_INCORRECT_MESSAGE,
-    USER_LOGIN_FULL_ROUTE,
 )
 from app.utils.database import (
     clear_database,

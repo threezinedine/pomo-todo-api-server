@@ -5,7 +5,7 @@ from sqlalchemy.orm import (
 )
 from sqlalchemy.engine import create_engine
 from dotenv import load_dotenv
-from app.constants import (
+from constants.env import (
     DATABASE_URI_ENV_VARIABLE_KEY,
     DATABASE_URI_DEFAULT,
 )
