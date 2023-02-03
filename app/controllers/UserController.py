@@ -99,3 +99,9 @@ class UserController:
                 user = None
 
         return status, user
+
+    def change_description_by_username(self, username: str, description: str):
+        user = self.session.query(User).filter(User.username == username).first()
+        user.description = description
+        self.session.commit()
+        return OK_STATUS, user
