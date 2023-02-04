@@ -6,6 +6,9 @@ from constants.status import (
     USERNAME_EXIST_STATUS,
     PASSWORD_IS_INCORRECT_STATUS,
 )
+from constants.database.user import (
+    USER_IMAGE_DEFAULT,
+)
 from databases.models.User import (
     User,
 )
@@ -152,7 +155,12 @@ class UserController:
 
     def get_user_image_path_by_username(self, username: str):
         user = self._get_user_by_username(username=username)
-        return OK_STATUS, user.imagePath
+        result = USER_IMAGE_DEFAULT
+
+        if user.imagePath is not None:
+            result = user.imagePath
+
+        return OK_STATUS, result
 
     def _get_user_by_username(self, username: str):
         return self.session.query(User).filter(
