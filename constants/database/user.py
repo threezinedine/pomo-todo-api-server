@@ -15,3 +15,4 @@ USER_USERID_KEY = "userId"
 USER_IMAGE_KEY = 'userImage'
 
 IMAGE_FOLDER = "images"
+USER_IMAGE_DEFAULT = 'images/user.png'

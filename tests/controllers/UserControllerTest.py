@@ -40,6 +40,7 @@ from constants.test.user import (
 )
 from constants.database.user import (
     IMAGE_FOLDER,
+    USER_IMAGE_DEFAULT,
 )
 from tests.database import get_testing_session
 
@@ -146,3 +147,12 @@ class UserControllerTest(unittest.TestCase):
 
         assertStatus(status, HTTP_200_OK)
         assert response == FIRST_USER_TEST_IMAGE_PATH
+
+    def test_given_a_user_is_created_and_the_image_is_no_uploaded_when_get_the_image_path_by_username_then_return_HTTP_200_OK_and_default_image(self):
+        createFirstUserBy(self.user_controller)
+
+        status, response = self.user_controller.get_user_image_path_by_username(
+            username=FIRST_USER_USERNAME)
+
+        assertStatus(status, HTTP_200_OK)
+        assert response == USER_IMAGE_DEFAULT
