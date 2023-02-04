@@ -135,3 +135,14 @@ class UserControllerTest(unittest.TestCase):
 
         assertStatus(status, HTTP_200_OK)
         assertUserWithDict(response, **FIRST_USER_FULL_DICT_NO_DESC_IMAG)
+
+    def test_given_a_user_is_created_and_the_image_is_uploaded_when_get_the_image_path_by_username_then_return_HTTP_200_OK_and_image_path(self):
+        createFirstUserBy(self.user_controller)
+        self.user_controller.change_user_image_path_by_username(
+            username=FIRST_USER_USERNAME, imagePath=FIRST_USER_TEST_IMAGE_PATH)
+
+        status, response = self.user_controller.get_user_image_path_by_username(
+            username=FIRST_USER_TEST_IMAGE_PATH)
+
+        assertStatus(status, HTTP_200_OK)
+        assert response == FIRST_USER_TEST_IMAGE_PATH
