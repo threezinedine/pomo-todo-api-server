@@ -25,6 +25,7 @@ from constants.routes import (
     USER_LOGIN_FULL_ROUTE,
     USER_CHANGE_DESCRIPION_FULL_ROUTE,
     USER_UPLOAD_IMAGE_FULL_ROUTE,
+    USER_GET_IMAGE_FULL_ROUTE,
 )
 from constants.database.user import (
     USERNAME_KEY,
@@ -229,6 +230,36 @@ class UserEndToEndTest(unittest.TestCase):
             }
         )
 
-        print(response.json(), response.status_code)
         assert response.status_code == HTTP_200_OK
         assertDictSubset(response.json(), FIRST_USER_DICT_WITHOUT_DESCRIPTION)
+
+    def test_get_user_image_with_existed_one_feature(self):
+        createFirstUserBy(self.user_controller)
+        token = getFirstUserTokenBy(self.user_controller)
+
+        with open(FIRST_USER_TEST_IMAGE_PATH, READ_BINARY_MODE) as file:
+            file_data = file.read()
+
+        userImage = (FIRST_USER_TEST_IMAGE_NAME,
+                     file_data, IMAGE_PNG_CONTENT_TYPE)
+        response = test_client.post(
+            USER_UPLOAD_IMAGE_FULL_ROUTE,
+            headers={
+                AUTHORIZATION_KEY: token,
+                USERID_KEY: str(FIRST_USER_USERID),
+            },
+            files={
+                USER_IMAGE_KEY: userImage,
+            }
+        )
+
+        response = test_client.get(
+            USER_GET_IMAGE_FULL_ROUTE,
+            headers={
+                AUTHORIZATION_KEY: token,
+                USERID_KEY: str(FIRST_USER_USERID),
+            },
+        )
+
+        assert response.status_code == HTTP_200_OK
+        assert response.json() is not None
