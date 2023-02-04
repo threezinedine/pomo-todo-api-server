@@ -150,6 +150,10 @@ class UserController:
 
         return OK_STATUS, user
 
+    def get_user_image_path_by_username(self, username: str):
+        user = self._get_user_by_username(username=username)
+        return OK_STATUS, user.imagePath
+
     def _get_user_by_username(self, username: str):
         return self.session.query(User).filter(
             User.username == username).first()

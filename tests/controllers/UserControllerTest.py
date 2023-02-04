@@ -142,7 +142,7 @@ class UserControllerTest(unittest.TestCase):
             username=FIRST_USER_USERNAME, imagePath=FIRST_USER_TEST_IMAGE_PATH)
 
         status, response = self.user_controller.get_user_image_path_by_username(
-            username=FIRST_USER_TEST_IMAGE_PATH)
+            username=FIRST_USER_USERNAME)
 
         assertStatus(status, HTTP_200_OK)
         assert response == FIRST_USER_TEST_IMAGE_PATH
