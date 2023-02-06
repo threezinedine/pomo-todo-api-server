@@ -154,6 +154,19 @@ class UserController:
         return OK_STATUS, user
 
     def get_user_image_path_by_username(self, username: str):
+        """"
+        Get the user image path by username.
+
+        Parameters
+        ----------
+            username: str
+                The username
+
+        Returns
+        -------
+            status: status_code, detail_message
+                The result status
+        """
         user = self._get_user_by_username(username=username)
         result = USER_IMAGE_DEFAULT
 

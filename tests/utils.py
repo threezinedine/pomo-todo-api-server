@@ -40,7 +40,7 @@ def createFirstUserBy(user_controller: UserController):
                                            password=FIRST_USER_PASSWORD)
 
 
-def getFirstUserTokenBy(user_controller: UserController):
+def getFirstUserTokenBy():
     response = test_client.post(
         USER_LOGIN_FULL_ROUTE,
         json={

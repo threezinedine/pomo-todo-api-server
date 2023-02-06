@@ -39,7 +39,6 @@ from constants.test.user import (
     FIRST_USER_FULL_DICT_NO_DESC_IMAG,
 )
 from constants.database.user import (
-    IMAGE_FOLDER,
     USER_IMAGE_DEFAULT,
 )
 from tests.database import get_testing_session
