@@ -5,12 +5,14 @@ from fastapi import (
     Body,
     File,
     UploadFile,
+    Response,
 )
 from sqlalchemy.orm import Session
 
 from constants import (
     HTTP_200_OK,
     HTTP_201_CREATED,
+    READ_BINARY_MODE,
     WRITE_BINARY_MODE,
 )
 from constants.database.user import (
@@ -22,6 +24,7 @@ from constants.database.user import (
 )
 from constants.routes import (
     USER_BASE_ROUTE,
+    USER_GET_IMAGE_ROUTE,
     USER_REGISTER_ROUTE,
     USER_LOGIN_ROUTE,
     USER_CHANGE_DESCRIPTION_ROUTE,
@@ -124,3 +127,22 @@ async def upload_image(userImage: UploadFile = File(),
         f.write(await userImage.read())
 
     return response
+
+
+@router.get(
+    USER_GET_IMAGE_ROUTE,
+    status_code=HTTP_200_OK,
+)
+async def get_image(session: Session = Depends(get_session),
+                    userInfo: dict = Depends(get_token)):
+    user_controller = UserController(session=session)
+
+    status, imagePath = user_controller.get_user_image_path_by_username(
+        username=userInfo[USERNAME_KEY])
+
+    handleStatus(status)
+
+    with open(imagePath, READ_BINARY_MODE) as f:
+        content = f.read()
+
+    return Response(content=content, media_type="image/png")

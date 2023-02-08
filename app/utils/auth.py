@@ -46,11 +46,12 @@ def verify_token(token: str, password: str, algorithm: str = ALGORITHM):
 def get_token(authorization: str = Header(),
               userId: int = Header(),
               session: Session = Depends(get_session)):
-
     user = session.query(User).filter(User.userId == userId).first()
+
     if user is None:
         raise HTTPException(
             status_code=HTTP_401_UNAUTHORIZED,
             detail=USERID_DOES_NOT_EXIST_MESSAGE
         )
+
     return verify_token(authorization, user.password)

@@ -21,7 +21,7 @@ from constants.message import (
     PASSWORD_IS_INCORRECT_MESSAGE,
 )
 from app.utils.database import (
-    clear_database,
+    clear_data,
 )
 from tests.utils import (
     assertStatus,
@@ -50,7 +50,7 @@ class UserControllerTest(unittest.TestCase):
         self.user_controller = UserController(self.session)
 
     def tearDown(self):
-        clear_database(self.session)
+        clear_data(self.session)
         self.session.close()
 
     def test_given_no_users_exist_when_get_all_users_then_returns_empty_array(self):

@@ -5,7 +5,7 @@ from fastapi.testclient import TestClient
 from databases.base import get_session
 from main import app
 from app.utils.database import (
-    clear_database,
+    clear_data,
 )
 from app.controllers import (
     UserController,
@@ -76,7 +76,7 @@ class UserEndToEndTest(unittest.TestCase):
         self.user_controller = UserController(self.session)
 
     def tearDown(self):
-        clear_database(self.session)
+        clear_data(self.session)
         self.session.close()
 
     def test_register_successfully_feature(self):
@@ -155,7 +155,7 @@ class UserEndToEndTest(unittest.TestCase):
 
     def test_the_update_user_description_successfully(self):
         createFirstUserBy(self.user_controller)
-        token = getFirstUserTokenBy(self.user_controller)
+        token = getFirstUserTokenBy()
 
         response = test_client.post(
             USER_CHANGE_DESCRIPION_FULL_ROUTE,
@@ -192,7 +192,7 @@ class UserEndToEndTest(unittest.TestCase):
 
     def test_change_user_description_with_not_match_userId(self):
         createFirstUserBy(self.user_controller)
-        token = getFirstUserTokenBy(self.user_controller)
+        token = getFirstUserTokenBy()
 
         response = test_client.post(
             USER_CHANGE_DESCRIPION_FULL_ROUTE,
@@ -211,7 +211,7 @@ class UserEndToEndTest(unittest.TestCase):
 
     def test_user_uploading_the_user_image_succesfully(self):
         createFirstUserBy(self.user_controller)
-        token = getFirstUserTokenBy(self.user_controller)
+        token = getFirstUserTokenBy()
 
         with open(FIRST_USER_TEST_IMAGE_PATH, READ_BINARY_MODE) as file:
             file_data = file.read()
@@ -235,7 +235,7 @@ class UserEndToEndTest(unittest.TestCase):
 
     def test_get_user_image_with_existed_one_feature(self):
         createFirstUserBy(self.user_controller)
-        token = getFirstUserTokenBy(self.user_controller)
+        token = getFirstUserTokenBy()
 
         with open(FIRST_USER_TEST_IMAGE_PATH, READ_BINARY_MODE) as file:
             file_data = file.read()
@@ -262,4 +262,4 @@ class UserEndToEndTest(unittest.TestCase):
         )
 
         assert response.status_code == HTTP_200_OK
-        assert response.json() is not None
+        assert response.content is not None
