@@ -2,6 +2,7 @@ from constants import (
     STATUS_CODE_KEY,
     DETAIL_MESSAGE_KEY,
     HTTP_200_OK,
+    HTTP_201_CREATED,
     HTTP_401_UNAUTHORIZED,
     HTTP_404_NOT_FOUND,
     HTTP_409_CONFLICT,
@@ -14,6 +15,11 @@ from constants.message import (
 
 OK_STATUS = {
     STATUS_CODE_KEY: HTTP_200_OK,
+    DETAIL_MESSAGE_KEY: None
+}
+
+CREATED_STATUS = {
+    STATUS_CODE_KEY: HTTP_201_CREATED,
     DETAIL_MESSAGE_KEY: None
 }
 
