@@ -34,8 +34,8 @@ def create_task(task: TaskRequestModel,
         taskDescription=task.taskDescription,
         plannedDate=task.plannedDate,
     )
+    print(task, task.taskId, task.plannedDate)
 
     handleStatus(status)
-    print(task, task.taskId)
 
     return task

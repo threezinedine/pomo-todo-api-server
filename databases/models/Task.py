@@ -6,7 +6,7 @@ from sqlalchemy import (
     Boolean,
     Date,
 )
-from datetime import datetime
+from datetime import datetime, date
 
 from databases.base import Base
 from constants.database.task import (
@@ -31,14 +31,13 @@ class Task(Base):
     def __init__(self, userId: int,
                  taskName: str,
                  plannedDate: datetime.date,
-                 taskDescription: str = None):
+                 taskDescription: date = None):
         self.userId = userId
         self.taskName = taskName
         self.taskDescription = taskDescription
         self.taskComplete = False
 
-        # get date from date string plannedDate
-        self.plannedDate = datetime.strptime(plannedDate, "%Y-%m-%d").date()
+        self.plannedDate = plannedDate
 
     def __repr__(self):
         return f"<Task userId={self.userId} taskId={self.taskId} taskName={self.taskName} complete={self.taskComplete} />"

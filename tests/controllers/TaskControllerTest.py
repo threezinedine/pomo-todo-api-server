@@ -1,4 +1,5 @@
 import unittest
+from datetime import date
 
 from app.utils.database import (
     clear_data,
@@ -44,7 +45,7 @@ class TaskControllerTest(unittest.TestCase):
             userId=FIRST_USER_USERID,
             taskName=FIRST_TASK_TASK_NAME,
             taskDescription=FIRST_TASK_TASK_DESCRIPTION,
-            plannedDate=FIRST_TASK_TASK_PLANNED_DATE,
+            plannedDate=date.fromisoformat(FIRST_TASK_TASK_PLANNED_DATE),
         )
 
         assertStatus(status, HTTP_201_CREATED)
@@ -56,7 +57,7 @@ class TaskControllerTest(unittest.TestCase):
             userId=FIRST_USER_USERID,
             taskName=FIRST_TASK_TASK_NAME,
             taskDescription=FIRST_TASK_TASK_DESCRIPTION,
-            plannedDate=FIRST_TASK_TASK_PLANNED_DATE,
+            plannedDate=date.fromisoformat(FIRST_TASK_TASK_PLANNED_DATE),
         )
 
         status, tasks = self.task_controller.get_all_tasks()
