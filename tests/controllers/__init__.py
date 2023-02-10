@@ -1,1 +1,2 @@
 from .UserControllerTest import UserControllerTest
+from .TaskControllerTest import TaskControllerTest
