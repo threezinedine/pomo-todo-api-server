@@ -19,7 +19,10 @@ from constants import (
 from constants.routes import (
     ROOT_ROUTE,
 )
-from app.api.v1 import users
+from app.api.v1 import (
+    users,
+    tasks,
+)
 from databases.base import get_session
 
 
@@ -27,10 +30,11 @@ load_dotenv()
 app = FastAPI()
 
 app.include_router(users.router)
+app.include_router(tasks.router)
 
 
 @app.get(ROOT_ROUTE)
-def home_url(session = Depends(get_session)):
+def home_url(session=Depends(get_session)):
     return dict(message=os.getenv(WELCOM_MESSAGE_ENV_VARIABLE_KEY, EMPTY_STRING))
 
 

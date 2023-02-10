@@ -3,7 +3,10 @@ import unittest
 from app.utils.database import (
     clear_data,
 )
-from constants import HTTP_201_CREATED
+from constants import (
+    HTTP_201_CREATED,
+    HTTP_200_OK,
+)
 from tests.database import (
     get_testing_session,
 )
@@ -18,7 +21,11 @@ from constants.test.task import (
 )
 from app.controllers.TaskController import TaskController
 from app.controllers.UserController import UserController
-from tests.utils import assertStatus, assertTaskWithDict, createFirstUserBy
+from tests.utils import (
+    assertStatus,
+    assertTaskWithDict,
+    createFirstUserBy
+)
 
 
 class TaskControllerTest(unittest.TestCase):
@@ -37,8 +44,22 @@ class TaskControllerTest(unittest.TestCase):
             userId=FIRST_USER_USERID,
             taskName=FIRST_TASK_TASK_NAME,
             taskDescription=FIRST_TASK_TASK_DESCRIPTION,
-            taskPlannedDate=FIRST_TASK_TASK_PLANNED_DATE,
+            plannedDate=FIRST_TASK_TASK_PLANNED_DATE,
         )
 
         assertStatus(status, HTTP_201_CREATED)
         assertTaskWithDict(task, **FIRST_TASK)
+
+    def test_given_a_task_exists_when_get_all_task_then_return_STATUS_OK_and_the_list_contains_that_task(self):
+        createFirstUserBy(self.user_controller)
+        self.task_controller.create_new_task(
+            userId=FIRST_USER_USERID,
+            taskName=FIRST_TASK_TASK_NAME,
+            taskDescription=FIRST_TASK_TASK_DESCRIPTION,
+            plannedDate=FIRST_TASK_TASK_PLANNED_DATE,
+        )
+
+        status, tasks = self.task_controller.get_all_tasks()
+
+        assertStatus(status, HTTP_200_OK)
+        assertTaskWithDict(tasks[0], **FIRST_TASK)

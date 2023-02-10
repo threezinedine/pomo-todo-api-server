@@ -39,4 +39,4 @@ class Task(Base):
         self.plannedDate = plannedDate
 
     def __repr__(self):
-        return "<Task userId={self.userId} taskId={self.taskId} taskName={self.taskName} complete={self.complete} />"
+        return f"<Task userId={self.userId} taskId={self.taskId} taskName={self.taskName} complete={self.taskComplete} />"

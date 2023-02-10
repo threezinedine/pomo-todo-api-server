@@ -16,7 +16,7 @@ class TaskController:
                         userId: int,
                         taskName: str,
                         taskDescription: str,
-                        taskPlannedDate: str):
+                        plannedDate: str):
         """
         Create a new task for the given user.
 
@@ -31,7 +31,7 @@ class TaskController:
             taskDescription : str
                 The description of the task.
 
-            taskPlannedDate : str
+            plannedDate : str
                 The planned date of the task.
 
         Returns
@@ -54,7 +54,7 @@ class TaskController:
             userId=userId,
             taskName=taskName,
             taskDescription=taskDescription,
-            plannedDate=taskPlannedDate,
+            plannedDate=plannedDate,
         )
 
         return status, task

@@ -1,8 +1,21 @@
 import unittest
 from app.controllers.TaskController import TaskController
-from constants import AUTHORIZATION_KEY, HTTP_201_CREATED
-from constants.database.task import FIRST_TASK, FIRST_TASK_TASK_DESCRIPTION, FIRST_TASK_TASK_NAME, FIRST_TASK_TASK_PLANNED_DATE, TASK_DESCRIPTION_KEY, TASK_NAME_KEY, TASK_PLANNED_DATE_KEY
+from constants import (
+    AUTHORIZATION_KEY,
+    HTTP_201_CREATED,
+)
+from constants.database.user import USERID_KEY
+from constants.test.task import (
+    FIRST_TASK,
+    FIRST_TASK_TASK_DESCRIPTION,
+    FIRST_TASK_TASK_NAME,
+    FIRST_TASK_TASK_PLANNED_DATE,
+    TASK_DESCRIPTION_KEY,
+    TASK_NAME_KEY,
+    TASK_PLANNED_DATE_KEY
+)
 from constants.routes import TASK_CREATE_FULL_ROUTE
+from constants.test.user import FIRST_USER_USERID
 
 from tests import (
     test_client,
@@ -35,6 +48,7 @@ class TaskEndToEndTest(unittest.TestCase):
             TASK_CREATE_FULL_ROUTE,
             headers={
                 AUTHORIZATION_KEY: token,
+                USERID_KEY: str(FIRST_USER_USERID),
             },
             json={
                 TASK_NAME_KEY: FIRST_TASK_TASK_NAME,
@@ -43,5 +57,6 @@ class TaskEndToEndTest(unittest.TestCase):
             }
         )
 
+        print(response, response.json())
         assert response.status_code == HTTP_201_CREATED
         assertTaskWithDict(response.json(), **FIRST_TASK)
