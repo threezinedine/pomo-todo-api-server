@@ -36,7 +36,9 @@ class Task(Base):
         self.taskName = taskName
         self.taskDescription = taskDescription
         self.taskComplete = False
-        self.plannedDate = plannedDate
+
+        # get date from date string plannedDate
+        self.plannedDate = datetime.strptime(plannedDate, "%Y-%m-%d").date()
 
     def __repr__(self):
         return f"<Task userId={self.userId} taskId={self.taskId} taskName={self.taskName} complete={self.taskComplete} />"

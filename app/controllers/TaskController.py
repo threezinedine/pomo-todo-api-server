@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 
-from constants.status import CREATED_STATUS
+from constants.status import CREATED_STATUS, OK_STATUS
 from databases.models import Task
 
 
@@ -57,4 +57,31 @@ class TaskController:
             plannedDate=plannedDate,
         )
 
+        self.session.add(task)
+        self.session.commit()
+
         return status, task
+
+    def get_all_tasks(self):
+        """
+        Get all the tasks.
+
+        Returns
+        -------
+            status : dict
+                The status of the request.
+
+                status_code: int
+                    The status code of the request.
+                message: str
+                    The message of the request.
+
+            tasks : list
+                The list of tasks.
+        """
+        # TODO: Get all the tasks, and return HTTP_200_OK and the list of tasks.
+        status = OK_STATUS
+
+        tasks = self.session.query(Task).all()
+
+        return status, tasks
