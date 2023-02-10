@@ -20,6 +20,7 @@ class Task(Base):
     __tablename__ = TASK_TABLE_NAME
 
     taskId = Column(Integer, primary_key=True, autoincrement=True)
+    userId = Column(Integer, nullable=False)
     taskName = Column(String(TASK_NAME_MAX_LENGTH), nullable=False)
     taskDescription = Column(String(TASK_DESCRIPTION_MAX_LENGTH))
     taskComplete = Column(Boolean)
@@ -27,13 +28,15 @@ class Task(Base):
     plannedDate = Column(Date, nullable=False)
     completedTime = Column(DateTime, default=None)
 
-    def __init__(self, taskName: str, 
-                        plannedDate: datetime.date,
-                        taskDescription: str = None):
+    def __init__(self, userId: int,
+                 taskName: str,
+                 plannedDate: datetime.date,
+                 taskDescription: str = None):
+        self.userId = userId
         self.taskName = taskName
         self.taskDescription = taskDescription
         self.taskComplete = False
         self.plannedDate = datetime.date
 
     def __repr__(self):
-        return "<Task taskId={self.taskId} taskName={self.taskName} complete={self.complete} />"
+        return "<Task userId={self.userId} taskId={self.taskId} taskName={self.taskName} complete={self.complete} />"

@@ -4,6 +4,8 @@ EMPTY_STRING = ""
 STATUS_CODE_KEY = "status_code"
 DETAIL_MESSAGE_KEY = "detail_message"
 ERROR_RESPONSE_DETAIL_KEY = "detail"
+AUTHORIZATION_KEY = "Authorization"
+
 
 HTTP_200_OK = 200
 HTTP_201_CREATED = 201

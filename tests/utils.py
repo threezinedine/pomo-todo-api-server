@@ -34,6 +34,11 @@ def assertUserWithDict(user, **user_data_dict):
         print(key, value, getattr(user, key))
         assert getattr(user, key) == value
 
+def assertTaskWithDict(task, **task_data_dict):
+    for key, value in task_data_dict.items():
+        print(key, value, getattr(task, key))
+        assert getattr(task, key) == value
+
 
 def createFirstUserBy(user_controller: UserController):
     return user_controller.create_new_user(username=FIRST_USER_USERNAME,
