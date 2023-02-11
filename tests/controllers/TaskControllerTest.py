@@ -7,10 +7,11 @@ from app.utils.database import (
 from constants import (
     HTTP_201_CREATED,
     HTTP_200_OK,
+    HTTP_403_FORBIDDEN,
     HTTP_404_NOT_FOUND,
 )
 from constants.database.task import TASK_COMPLETED_TIME_KEY, TASK_ID_KEY
-from constants.message import TASK_NOT_FOUND_MESSAGE
+from constants.message import NO_PERMISSION_MESSAGE, TASK_NOT_FOUND_MESSAGE
 from constants.status import TASK_NOT_FOUND_STATUS
 from tests.database import (
     get_testing_session,
@@ -117,5 +118,5 @@ class TaskControllerTest(unittest.TestCase):
                 FIRST_TASK_COMPLETE[TASK_COMPLETED_TIME_KEY]),
         )
 
-        assertStatus(status, HTTP_404_NOT_FOUND, TASK_NOT_FOUND_MESSAGE)
+        assertStatus(status, HTTP_403_FORBIDDEN, NO_PERMISSION_MESSAGE)
         assert task is None

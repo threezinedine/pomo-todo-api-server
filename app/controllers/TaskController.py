@@ -1,7 +1,7 @@
 from datetime import datetime
 from sqlalchemy.orm import Session
 
-from constants.status import CREATED_STATUS, OK_STATUS, TASK_NOT_FOUND_STATUS
+from constants.status import CREATED_STATUS, NO_PERMISSION_STATUS, OK_STATUS, TASK_NOT_FOUND_STATUS
 from databases.models import Task
 
 
@@ -122,6 +122,8 @@ class TaskController:
         # udpate the taskComplete to True and the current time to completedTime
         # and return HTTP_200_OK and the task object.
         # TODO: If the task is not found, return TASK_NOT_FOUND_STATUS and None.
+        # TODO: If the userId does not match the userId of the task,
+        # return NO_PERMISSION_STATUS and None.
 
         status = OK_STATUS
 
@@ -129,6 +131,9 @@ class TaskController:
 
         if task is None:
             status = TASK_NOT_FOUND_STATUS
+        elif task.userId != userId:
+            status = NO_PERMISSION_STATUS
+            task = None
         else:
             task.taskComplete = True
             task.completedTime = completedTime
