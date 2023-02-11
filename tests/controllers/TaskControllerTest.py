@@ -8,6 +8,7 @@ from constants import (
     HTTP_201_CREATED,
     HTTP_200_OK,
 )
+from constants.database.task import TASK_ID_KEY
 from tests.database import (
     get_testing_session,
 )
@@ -16,6 +17,7 @@ from constants.test.user import (
 )
 from constants.test.task import (
     FIRST_TASK,
+    FIRST_TASK_COMPLETE,
     FIRST_TASK_TASK_NAME,
     FIRST_TASK_TASK_DESCRIPTION,
     FIRST_TASK_TASK_PLANNED_DATE,
@@ -64,3 +66,19 @@ class TaskControllerTest(unittest.TestCase):
 
         assertStatus(status, HTTP_200_OK)
         assertTaskWithDict(tasks[0], **FIRST_TASK)
+
+    def test_given_an_user_and_a_task_are_created_when_complete_that_task_then_return_OK_STATUS_and_that_task(self):
+        createFirstUserBy(self.user_controller)
+        self.task_controller.create_new_task(
+            userId=FIRST_USER_USERID,
+            taskName=FIRST_TASK_TASK_NAME,
+            taskDescription=FIRST_TASK_TASK_DESCRIPTION,
+            plannedDate=date.fromisoformat(FIRST_TASK_TASK_PLANNED_DATE),
+        )
+
+        status, task = self.task_controller.complete_task_by_task_id(
+            taskId=FIRST_TASK[TASK_ID_KEY]
+        )
+
+        assertStatus(status, HTTP_200_OK)
+        assertTaskWithDict(task, **FIRST_TASK_COMPLETE)
