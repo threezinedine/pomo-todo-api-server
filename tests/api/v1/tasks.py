@@ -174,3 +174,32 @@ class TaskEndToEndTest(unittest.TestCase):
 
         assert response.status_code == HTTP_200_OK
         assertTaskWithDict(response.json(), **FIRST_TASK)
+
+    # e2e test for getting all tasks of the user
+    def test_get_all_tasks_of_the_user(self):
+        createFirstUserBy(self.user_controller)
+        token = getFirstUserTokenBy()
+
+        test_client.post(
+            TASK_CREATE_FULL_ROUTE,
+            headers={
+                AUTHORIZATION_KEY: token,
+                USERID_KEY: str(FIRST_USER_USERID),
+            },
+            json={
+                TASK_NAME_KEY: FIRST_TASK_TASK_NAME,
+                TASK_DESCRIPTION_KEY: FIRST_TASK_TASK_DESCRIPTION,
+                TASK_PLANNED_DATE_KEY: FIRST_TASK_TASK_PLANNED_DATE,
+            }
+        )
+
+        response = test_client.get(
+            TASK_ROUTE_PREFIX,
+            headers={
+                AUTHORIZATION_KEY: token,
+                USERID_KEY: str(FIRST_USER_USERID),
+            },
+        )
+
+        assert response.status_code == HTTP_200_OK
+        assertTaskWithDict(response.json()[0], **FIRST_TASK)

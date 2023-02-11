@@ -12,6 +12,7 @@ from constants.database.user import USERID_KEY
 
 from constants.routes import (
     TASK_COMPLETE_ROUTE,
+    TASK_GET_ALL_ROUTE,
     TASK_GET_ROUTE,
     TASK_ROUTE_PREFIX,
     TASK_TAG,
@@ -79,3 +80,16 @@ def get_task(taskId: int,
         handleStatus(status)
     
         return task
+
+@router.get(
+    TASK_GET_ALL_ROUTE,
+    status_code=HTTP_200_OK,
+    response_model=list[TaskResponseModel],
+)
+def get_all_tasks(session=Depends(get_session),
+                  userInfo: dict = Depends(get_token)):
+    status, tasks = TaskController(session).get_all_tasks()
+
+    handleStatus(status)
+
+    return tasks
