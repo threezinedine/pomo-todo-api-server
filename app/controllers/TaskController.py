@@ -87,14 +87,18 @@ class TaskController:
 
         return status, tasks
 
-    def complete_task_by_task_id(self,
-                                 taskId: int,
-                                 completedTime: datetime):
+    def complete_task_by_task_id_and_user_id(self,
+                                             userId: int,
+                                             taskId: int,
+                                             completedTime: datetime):
         """
         Complete the task by the given taskId.
 
         Parameters
         ----------
+            userId : int
+                The id of the user who create the task.
+
             taskId : int
                 The id of the task.
 
