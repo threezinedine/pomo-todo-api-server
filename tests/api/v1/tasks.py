@@ -2,7 +2,6 @@ import unittest
 from app.controllers.TaskController import TaskController
 from constants import (
     AUTHORIZATION_KEY,
-    DETAIL_MESSAGE_KEY,
     ERROR_RESPONSE_DETAIL_KEY,
     HTTP_200_OK,
     HTTP_201_CREATED,
@@ -44,7 +43,7 @@ from app.utils.database import (
 )
 
 from app.controllers.UserController import UserController
-from tests.utils import assertTaskWithDict, createFirstUserBy, createSecondUserBy, getFirstUserTokenBy, getSecondUserTokenBy
+from tests.utils import assertTaskWithDict, createFirstTaskForFirstUserBy, createFirstUserBy, createSecondUserBy, getFirstUserTokenBy, getSecondUserTokenBy
 
 
 class TaskEndToEndTest(unittest.TestCase):
@@ -78,20 +77,8 @@ class TaskEndToEndTest(unittest.TestCase):
 
     def test_complete_task_feature(self):
         createFirstUserBy(self.user_controller)
+        createFirstTaskForFirstUserBy(self.task_controller)
         token = getFirstUserTokenBy()
-
-        test_client.post(
-            TASK_CREATE_FULL_ROUTE,
-            headers={
-                AUTHORIZATION_KEY: token,
-                USERID_KEY: str(FIRST_USER_USERID),
-            },
-            json={
-                TASK_NAME_KEY: FIRST_TASK_TASK_NAME,
-                TASK_DESCRIPTION_KEY: FIRST_TASK_TASK_DESCRIPTION,
-                TASK_PLANNED_DATE_KEY: FIRST_TASK_TASK_PLANNED_DATE,
-            }
-        )
 
         response = test_client.put(
             TASK_COMPLETE_FULL_ROUTE,
@@ -114,21 +101,9 @@ class TaskEndToEndTest(unittest.TestCase):
     def test_complete_task_which_have_no_permission(self):
         createFirstUserBy(self.user_controller)
         createSecondUserBy(self.user_controller)
+        createFirstTaskForFirstUserBy(self.task_controller)
         token = getFirstUserTokenBy()
         token_2 = getSecondUserTokenBy()
-
-        test_client.post(
-            TASK_CREATE_FULL_ROUTE,
-            headers={
-                AUTHORIZATION_KEY: token,
-                USERID_KEY: str(FIRST_USER_USERID),
-            },
-            json={
-                TASK_NAME_KEY: FIRST_TASK_TASK_NAME,
-                TASK_DESCRIPTION_KEY: FIRST_TASK_TASK_DESCRIPTION,
-                TASK_PLANNED_DATE_KEY: FIRST_TASK_TASK_PLANNED_DATE,
-            }
-        )
 
         response = test_client.put(
             TASK_COMPLETE_FULL_ROUTE,
@@ -149,20 +124,8 @@ class TaskEndToEndTest(unittest.TestCase):
     # e2e test for getting a task by task id
     def test_get_task_by_task_id(self):
         createFirstUserBy(self.user_controller)
+        createFirstTaskForFirstUserBy(self.task_controller)
         token = getFirstUserTokenBy()
-
-        test_client.post(
-            TASK_CREATE_FULL_ROUTE,
-            headers={
-                AUTHORIZATION_KEY: token,
-                USERID_KEY: str(FIRST_USER_USERID),
-            },
-            json={
-                TASK_NAME_KEY: FIRST_TASK_TASK_NAME,
-                TASK_DESCRIPTION_KEY: FIRST_TASK_TASK_DESCRIPTION,
-                TASK_PLANNED_DATE_KEY: FIRST_TASK_TASK_PLANNED_DATE,
-            }
-        )
 
         response = test_client.get(
             f"{TASK_ROUTE_PREFIX}/{FIRST_TASK_TASK_ID}",
@@ -178,20 +141,8 @@ class TaskEndToEndTest(unittest.TestCase):
     # e2e test for getting all tasks of the user
     def test_get_all_tasks_of_the_user(self):
         createFirstUserBy(self.user_controller)
+        createFirstTaskForFirstUserBy(self.task_controller)
         token = getFirstUserTokenBy()
-
-        test_client.post(
-            TASK_CREATE_FULL_ROUTE,
-            headers={
-                AUTHORIZATION_KEY: token,
-                USERID_KEY: str(FIRST_USER_USERID),
-            },
-            json={
-                TASK_NAME_KEY: FIRST_TASK_TASK_NAME,
-                TASK_DESCRIPTION_KEY: FIRST_TASK_TASK_DESCRIPTION,
-                TASK_PLANNED_DATE_KEY: FIRST_TASK_TASK_PLANNED_DATE,
-            }
-        )
 
         response = test_client.get(
             TASK_ROUTE_PREFIX,
