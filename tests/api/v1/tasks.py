@@ -144,3 +144,32 @@ class TaskEndToEndTest(unittest.TestCase):
         assert response.status_code == HTTP_403_FORBIDDEN
         assert response.json()[
             ERROR_RESPONSE_DETAIL_KEY] == NO_PERMISSION_MESSAGE
+
+    # e2e test for getting a task by task id
+    def test_get_task_by_task_id(self):
+        createFirstUserBy(self.user_controller)
+        token = getFirstUserTokenBy()
+
+        test_client.post(
+            TASK_CREATE_FULL_ROUTE,
+            headers={
+                AUTHORIZATION_KEY: token,
+                USERID_KEY: str(FIRST_USER_USERID),
+            },
+            json={
+                TASK_NAME_KEY: FIRST_TASK_TASK_NAME,
+                TASK_DESCRIPTION_KEY: FIRST_TASK_TASK_DESCRIPTION,
+                TASK_PLANNED_DATE_KEY: FIRST_TASK_TASK_PLANNED_DATE,
+            }
+        )
+
+        response = test_client.get(
+            f"{TASK_COMPLETE_FULL_ROUTE}/{FIRST_TASK_TASK_ID}",
+            headers={
+                AUTHORIZATION_KEY: token,
+                USERID_KEY: str(FIRST_USER_USERID),
+            },
+        )
+
+        assert response.status_code == HTTP_200_OK
+        assertTaskWithDict(response.json(), **FIRST_TASK)
