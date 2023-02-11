@@ -182,3 +182,32 @@ class TaskController:
             task = None
 
         return status, task
+
+    def get_all_tasks_of_user(self, userId: int):
+        """
+        Get all the tasks of the given user.
+
+        Parameters
+        ----------
+            userId : int
+                The id of the user who create the task.
+
+        Returns
+        -------
+            status : dict
+                The status of the request.
+
+                status_code: int
+                    The status code of the request.
+                message: str
+                    The message of the request.
+
+            tasks : list
+                The list of tasks.
+        """
+        # TODO: Get all the tasks of the given user, and return HTTP_200_OK and the list of tasks.
+        status = OK_STATUS
+
+        tasks = self.session.query(Task).filter(Task.userId == userId).all()
+
+        return status, tasks

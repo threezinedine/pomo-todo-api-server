@@ -172,6 +172,5 @@ class TaskEndToEndTest(unittest.TestCase):
             },
         )
 
-        print(response.json(), response)
         assert response.status_code == HTTP_200_OK
         assertTaskWithDict(response.json(), **FIRST_TASK)

@@ -1,9 +1,13 @@
+from datetime import date
+from app.controllers.TaskController import TaskController
 from constants import (
     HTTP_200_OK,
     STATUS_CODE_KEY,
     DETAIL_MESSAGE_KEY,
 )
+from constants.test.task import FIRST_TASK_TASK_DESCRIPTION, FIRST_TASK_TASK_NAME, FIRST_TASK_TASK_PLANNED_DATE
 from constants.test.user import (
+    FIRST_USER_USERID,
     FIRST_USER_USERNAME,
     FIRST_USER_PASSWORD,
     SECOND_USER_PASSWORD,
@@ -80,3 +84,12 @@ def getSecondUserTokenBy():
     )
 
     return response.json()[TOKEN_KEY]
+
+
+def createFirstTaskForFirstUserBy(task_controller: TaskController):
+    return task_controller.create_new_task(
+        userId=FIRST_USER_USERID,
+        taskName=FIRST_TASK_TASK_NAME,
+        taskDescription=FIRST_TASK_TASK_DESCRIPTION,
+        plannedDate=date.fromisoformat(FIRST_TASK_TASK_PLANNED_DATE),
+    )

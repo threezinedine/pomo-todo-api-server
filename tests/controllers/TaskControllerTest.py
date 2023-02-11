@@ -32,6 +32,7 @@ from app.controllers.UserController import UserController
 from tests.utils import (
     assertStatus,
     assertTaskWithDict,
+    createFirstTaskForFirstUserBy,
     createFirstUserBy
 )
 
@@ -60,12 +61,7 @@ class TaskControllerTest(unittest.TestCase):
 
     def test_given_a_task_exists_when_get_all_task_then_return_STATUS_OK_and_the_list_contains_that_task(self):
         createFirstUserBy(self.user_controller)
-        self.task_controller.create_new_task(
-            userId=FIRST_USER_USERID,
-            taskName=FIRST_TASK_TASK_NAME,
-            taskDescription=FIRST_TASK_TASK_DESCRIPTION,
-            plannedDate=date.fromisoformat(FIRST_TASK_TASK_PLANNED_DATE),
-        )
+        createFirstTaskForFirstUserBy(self.task_controller)
 
         status, tasks = self.task_controller.get_all_tasks()
 
@@ -74,12 +70,7 @@ class TaskControllerTest(unittest.TestCase):
 
     def test_given_an_user_and_a_task_are_created_when_complete_that_task_then_return_OK_STATUS_and_that_task(self):
         createFirstUserBy(self.user_controller)
-        self.task_controller.create_new_task(
-            userId=FIRST_USER_USERID,
-            taskName=FIRST_TASK_TASK_NAME,
-            taskDescription=FIRST_TASK_TASK_DESCRIPTION,
-            plannedDate=date.fromisoformat(FIRST_TASK_TASK_PLANNED_DATE),
-        )
+        createFirstTaskForFirstUserBy(self.task_controller)
 
         status, task = self.task_controller.complete_task_by_task_id_and_user_id(
             userId=FIRST_USER_USERID,
@@ -104,12 +95,7 @@ class TaskControllerTest(unittest.TestCase):
 
     def test_given_when_complete_a_task_with_wrong_user_id_then_return_NO_PERMISSION_STATUS_and_none(self):
         createFirstUserBy(self.user_controller)
-        self.task_controller.create_new_task(
-            userId=FIRST_USER_USERID,
-            taskName=FIRST_TASK_TASK_NAME,
-            taskDescription=FIRST_TASK_TASK_DESCRIPTION,
-            plannedDate=date.fromisoformat(FIRST_TASK_TASK_PLANNED_DATE),
-        )
+        createFirstTaskForFirstUserBy(self.task_controller)
 
         status, task = self.task_controller.complete_task_by_task_id_and_user_id(
             userId=FIRST_USER_WRONG_USERID,
@@ -124,12 +110,7 @@ class TaskControllerTest(unittest.TestCase):
     # create three cases for get_task_a_task_by_task_id_and_user_id
     def test_given_a_task_exists_when_get_that_task_then_return_STATUS_OK_and_that_task(self):
         createFirstUserBy(self.user_controller)
-        self.task_controller.create_new_task(
-            userId=FIRST_USER_USERID,
-            taskName=FIRST_TASK_TASK_NAME,
-            taskDescription=FIRST_TASK_TASK_DESCRIPTION,
-            plannedDate=date.fromisoformat(FIRST_TASK_TASK_PLANNED_DATE),
-        )
+        createFirstTaskForFirstUserBy(self.task_controller)
 
         status, task = self.task_controller.get_task_by_task_id_and_user_id(
             userId=FIRST_USER_USERID,
@@ -150,12 +131,7 @@ class TaskControllerTest(unittest.TestCase):
 
     def test_given_when_get_a_task_with_wrong_user_id_then_return_NO_PERMISSION_STATUS_and_none(self):
         createFirstUserBy(self.user_controller)
-        self.task_controller.create_new_task(
-            userId=FIRST_USER_USERID,
-            taskName=FIRST_TASK_TASK_NAME,
-            taskDescription=FIRST_TASK_TASK_DESCRIPTION,
-            plannedDate=date.fromisoformat(FIRST_TASK_TASK_PLANNED_DATE),
-        )
+        createFirstTaskForFirstUserBy(self.task_controller)
 
         status, task = self.task_controller.get_task_by_task_id_and_user_id(
             userId=FIRST_USER_WRONG_USERID,
@@ -164,3 +140,15 @@ class TaskControllerTest(unittest.TestCase):
 
         assertStatus(status, HTTP_403_FORBIDDEN, NO_PERMISSION_MESSAGE)
         assert task is None
+
+    # test for getting all tasks of a user
+    def test_given_a_user_and_a_task_are_created_when_get_all_tasks_of_that_user_then_return_STATUS_OK_and_the_list_contains_that_task(self):
+        createFirstUserBy(self.user_controller)
+        createFirstTaskForFirstUserBy(self.task_controller)
+
+        status, tasks = self.task_controller.get_all_tasks_of_user(
+            userId=FIRST_USER_USERID,
+        )
+
+        assertStatus(status, HTTP_200_OK)
+        assertTaskWithDict(tasks[0], **FIRST_TASK)
