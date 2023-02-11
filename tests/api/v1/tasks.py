@@ -18,6 +18,8 @@ from constants.database.task import (
 from constants.message import NO_PERMISSION_MESSAGE
 from constants.test.task import (
     FIRST_TASK,
+    FIRST_TASK_CHANGE_TASK_NAME,
+    FIRST_TASK_CHANGED_TASK_NAME_TASK,
     FIRST_TASK_COMPLETE,
     FIRST_TASK_COMPLETED_TIME,
     FIRST_TASK_TASK_DESCRIPTION,
@@ -154,3 +156,26 @@ class TaskEndToEndTest(unittest.TestCase):
 
         assert response.status_code == HTTP_200_OK
         assertTaskWithDict(response.json()[0], **FIRST_TASK)
+
+    # e2e test for changing the task name
+    def test_change_task_name(self):
+        createFirstUserBy(self.user_controller)
+        createFirstTaskForFirstUserBy(self.task_controller)
+        token = getFirstUserTokenBy()
+
+        response = test_client.put(
+            f"{TASK_ROUTE_PREFIX}/task-name/{FIRST_TASK_TASK_ID}",
+            headers={
+                AUTHORIZATION_KEY: token,
+                USERID_KEY: str(FIRST_USER_USERID),
+            },
+            json={
+                TASK_ID_KEY: FIRST_TASK_TASK_ID,
+                TASK_NAME_KEY: FIRST_TASK_CHANGE_TASK_NAME,
+            }
+        )
+
+        print(response, response.json())
+        assert response.status_code == HTTP_200_OK
+        assertTaskWithDict(response.json(), **
+                           FIRST_TASK_CHANGED_TASK_NAME_TASK)

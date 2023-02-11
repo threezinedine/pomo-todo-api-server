@@ -3,7 +3,7 @@ from fastapi import (
     APIRouter,
     Depends,
 )
-from app.schemas.TaskSchema import TaskCompleteRequestModel, TaskRequestModel, TaskResponseModel
+from app.schemas.TaskSchema import TaskChangeTaskNameRequestModel, TaskCompleteRequestModel, TaskRequestModel, TaskResponseModel
 from app.utils.auth import get_token
 from app.utils.api import handleStatus
 from app.controllers.TaskController import TaskController
@@ -11,6 +11,7 @@ from constants import HTTP_200_OK, HTTP_201_CREATED
 from constants.database.user import USERID_KEY
 
 from constants.routes import (
+    TASK_CHANGE_TASK_NAME_ROUTE,
     TASK_COMPLETE_ROUTE,
     TASK_GET_ALL_ROUTE,
     TASK_GET_ROUTE,
@@ -70,16 +71,17 @@ def complete_task(task: TaskCompleteRequestModel,
     response_model=TaskResponseModel,
 )
 def get_task(taskId: int,
-                session=Depends(get_session),
-                userInfo: dict = Depends(get_token)):
-        status, task = TaskController(session).get_task_by_task_id_and_user_id(
-            userId=userInfo[USERID_KEY],
-            taskId=taskId,
-        )
-    
-        handleStatus(status)
-    
-        return task
+             session=Depends(get_session),
+             userInfo: dict = Depends(get_token)):
+    status, task = TaskController(session).get_task_by_task_id_and_user_id(
+        userId=userInfo[USERID_KEY],
+        taskId=taskId,
+    )
+
+    handleStatus(status)
+
+    return task
+
 
 @router.get(
     TASK_GET_ALL_ROUTE,
@@ -93,3 +95,22 @@ def get_all_tasks(session=Depends(get_session),
     handleStatus(status)
 
     return tasks
+
+
+@router.put(
+    TASK_CHANGE_TASK_NAME_ROUTE,
+    status_code=HTTP_200_OK,
+    response_model=TaskResponseModel,
+)
+def change_task_name(task: TaskChangeTaskNameRequestModel,
+                     session=Depends(get_session),
+                     userInfo: dict = Depends(get_token)):
+    status, task = TaskController(session).change_task_name_by_task_id_and_user_id(
+        userId=userInfo[USERID_KEY],
+        taskId=task.taskId,
+        newTaskName=task.taskName,
+    )
+
+    handleStatus(status)
+
+    return task

@@ -30,3 +30,11 @@ class TaskResponseModel(TaskRequestModel):
     userId: int
     taskComplete: bool
     completedTime: Union[datetime, None]
+
+
+class TaskChangeTaskNameRequestModel(BaseModel):
+    taskId: int
+    taskName: str
+
+    class Config:
+        orm_mode = True
