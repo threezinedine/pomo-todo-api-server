@@ -168,9 +168,17 @@ class TaskController:
                 The task object.
         """
         # TODO: Get the task by the given taskId, and return HTTP_200_OK and the task object.
+        # TODO: If the task is not found, return TASK_NOT_FOUND_STATUS and None.
+        # TODO: If the userId does not match the userId of the task, return NO_PERMISSION_STATUS and None.
 
         status = OK_STATUS
 
         task = self.session.query(Task).filter(Task.taskId == taskId).first()
+
+        if task is None:
+            status = TASK_NOT_FOUND_STATUS
+        elif task.userId != userId:
+            status = NO_PERMISSION_STATUS
+            task = None
 
         return status, task

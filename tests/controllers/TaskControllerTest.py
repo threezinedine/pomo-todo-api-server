@@ -139,7 +139,6 @@ class TaskControllerTest(unittest.TestCase):
         assertStatus(status, HTTP_200_OK)
         assertTaskWithDict(task, **FIRST_TASK)
 
-    @unittest.skip("Not implemented yet")
     def test_given_when_get_a_task_with_non_existed_task_id_then_return_TASK_NOT_FOUND_and_none(self):
         status, task = self.task_controller.get_task_by_task_id_and_user_id(
             userId=FIRST_USER_USERID,
@@ -149,7 +148,6 @@ class TaskControllerTest(unittest.TestCase):
         assertStatus(status, HTTP_404_NOT_FOUND, TASK_NOT_FOUND_MESSAGE)
         assert task is None
 
-    @unittest.skip("Not implemented yet")
     def test_given_when_get_a_task_with_wrong_user_id_then_return_NO_PERMISSION_STATUS_and_none(self):
         createFirstUserBy(self.user_controller)
         self.task_controller.create_new_task(
