@@ -17,6 +17,7 @@ from tests.database import (
 )
 from constants.test.user import (
     FIRST_USER_USERID,
+    FIRST_USER_WRONG_USERID,
 )
 from constants.test.task import (
     FIRST_TASK,
@@ -92,6 +93,25 @@ class TaskControllerTest(unittest.TestCase):
     def test_given_when_complete_a_task_with_non_existed_task_id_then_return_TASK_NOT_FOUND_and_none(self):
         status, task = self.task_controller.complete_task_by_task_id_and_user_id(
             userId=FIRST_USER_USERID,
+            taskId=FIRST_TASK[TASK_ID_KEY],
+            completedTime=datetime.fromisoformat(
+                FIRST_TASK_COMPLETE[TASK_COMPLETED_TIME_KEY]),
+        )
+
+        assertStatus(status, HTTP_404_NOT_FOUND, TASK_NOT_FOUND_MESSAGE)
+        assert task is None
+
+    def test_given_when_complete_a_task_with_wrong_user_id_then_return_NO_PERMISSION_STATUS_and_none(self):
+        createFirstUserBy(self.user_controller)
+        self.task_controller.create_new_task(
+            userId=FIRST_USER_USERID,
+            taskName=FIRST_TASK_TASK_NAME,
+            taskDescription=FIRST_TASK_TASK_DESCRIPTION,
+            plannedDate=date.fromisoformat(FIRST_TASK_TASK_PLANNED_DATE),
+        )
+
+        status, task = self.task_controller.complete_task_by_task_id_and_user_id(
+            userId=FIRST_USER_WRONG_USERID,
             taskId=FIRST_TASK[TASK_ID_KEY],
             completedTime=datetime.fromisoformat(
                 FIRST_TASK_COMPLETE[TASK_COMPLETED_TIME_KEY]),
