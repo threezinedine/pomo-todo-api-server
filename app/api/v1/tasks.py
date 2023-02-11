@@ -50,7 +50,8 @@ def create_task(task: TaskRequestModel,
 def complete_task(task: TaskCompleteRequestModel,
                   session=Depends(get_session),
                   userInfo: dict = Depends(get_token)):
-    status, task = TaskController(session).complete_task_by_task_id(
+    status, task = TaskController(session).complete_task_by_task_id_and_user_id(
+        userId=userInfo[USERID_KEY],
         taskId=task.taskId,
         completedTime=task.completedTime,
     )

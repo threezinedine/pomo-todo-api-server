@@ -3,6 +3,7 @@ from app.controllers.TaskController import TaskController
 from constants import (
     AUTHORIZATION_KEY,
     DETAIL_MESSAGE_KEY,
+    ERROR_RESPONSE_DETAIL_KEY,
     HTTP_200_OK,
     HTTP_201_CREATED,
     HTTP_403_FORBIDDEN,
@@ -29,7 +30,7 @@ from constants.routes import (
     TASK_CREATE_FULL_ROUTE,
     TASK_COMPLETE_FULL_ROUTE,
 )
-from constants.test.user import FIRST_USER_USERID
+from constants.test.user import FIRST_USER_USERID, SECOND_USER_USERID
 
 from tests import (
     test_client,
@@ -42,7 +43,7 @@ from app.utils.database import (
 )
 
 from app.controllers.UserController import UserController
-from tests.utils import assertTaskWithDict, createFirstUserBy, createSecondUserBy, getFirstUserTokenBy
+from tests.utils import assertTaskWithDict, createFirstUserBy, createSecondUserBy, getFirstUserTokenBy, getSecondUserTokenBy
 
 
 class TaskEndToEndTest(unittest.TestCase):
@@ -113,6 +114,7 @@ class TaskEndToEndTest(unittest.TestCase):
         createFirstUserBy(self.user_controller)
         createSecondUserBy(self.user_controller)
         token = getFirstUserTokenBy()
+        token_2 = getSecondUserTokenBy()
 
         test_client.post(
             TASK_CREATE_FULL_ROUTE,
@@ -130,8 +132,8 @@ class TaskEndToEndTest(unittest.TestCase):
         response = test_client.put(
             TASK_COMPLETE_FULL_ROUTE,
             headers={
-                AUTHORIZATION_KEY: token,
-                USERID_KEY: str(FIRST_USER_USERID + 1),
+                AUTHORIZATION_KEY: token_2,
+                USERID_KEY: str(SECOND_USER_USERID),
             },
             json={
                 TASK_ID_KEY: FIRST_TASK_TASK_ID,
@@ -140,4 +142,5 @@ class TaskEndToEndTest(unittest.TestCase):
         )
 
         assert response.status_code == HTTP_403_FORBIDDEN
-        assert response.json()[DETAIL_MESSAGE_KEY] == NO_PERMISSION_MESSAGE
+        assert response.json()[
+            ERROR_RESPONSE_DETAIL_KEY] == NO_PERMISSION_MESSAGE
