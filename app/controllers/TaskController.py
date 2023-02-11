@@ -356,3 +356,32 @@ class TaskController:
             self.session.commit()
 
         return status, None
+
+    def delete_all_tasks_by_user_id(self, userId: int):
+        """
+        Delete all the tasks of the given user.
+
+        Parameters
+        ----------
+            userId : int
+                The id of the user who create the task.
+
+        Returns
+        -------
+            status : dict
+                The status of the request.
+
+                status_code: int
+                    The status code of the request.
+                message: str
+                    The message of the request.
+        """
+        # TODO: Get all the tasks of the given user, delete all the tasks and return HTTP_200_OK.
+
+        status = OK_STATUS
+
+        self.session.query(Task).filter(Task.userId == userId).delete()
+
+        self.session.commit()
+
+        return status, None

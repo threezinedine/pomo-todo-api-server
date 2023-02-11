@@ -270,3 +270,15 @@ class TaskControllerTest(unittest.TestCase):
 
         assertStatus(status, HTTP_403_FORBIDDEN, NO_PERMISSION_MESSAGE)
         assert task is None
+
+    # test for deleting all tasks by user id
+    def test_given_a_task_exists_when_delete_all_tasks_then_return_STATUS_OK_and_none(self):
+        createFirstUserBy(self.user_controller)
+        createFirstTaskForFirstUserBy(self.task_controller)
+
+        status, task = self.task_controller.delete_all_tasks_by_user_id(
+            userId=FIRST_USER_USERID,
+        )
+
+        assertStatus(status, HTTP_200_OK)
+        assert task is None
