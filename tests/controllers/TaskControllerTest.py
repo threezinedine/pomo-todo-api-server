@@ -25,6 +25,8 @@ from constants.test.task import (
     FIRST_TASK_CHANGE_TASK_DESCRIPTION,
     FIRST_TASK_CHANGE_TASK_DESCRIPTION_TASK,
     FIRST_TASK_CHANGE_TASK_NAME,
+    FIRST_TASK_CHANGE_TASK_PLANNED_DATE,
+    FIRST_TASK_CHANGE_TASK_PLANNED_DATE_TASK,
     FIRST_TASK_CHANGED_TASK_NAME_TASK,
     FIRST_TASK_COMPLETE,
     FIRST_TASK_TASK_NAME,
@@ -281,4 +283,43 @@ class TaskControllerTest(unittest.TestCase):
         )
 
         assertStatus(status, HTTP_200_OK)
+        assert task is None
+
+    # test for changing task planned date with the task id and user id
+    def test_given_a_task_exists_when_change_the_task_planned_date_then_return_STATUS_OK_and_that_task(self):
+        createFirstUserBy(self.user_controller)
+        createFirstTaskForFirstUserBy(self.task_controller)
+
+        status, task = self.task_controller.change_task_planned_date_by_task_id_and_user_id(
+            userId=FIRST_USER_USERID,
+            taskId=FIRST_TASK[TASK_ID_KEY],
+            newTaskPlannedDate=FIRST_TASK_CHANGE_TASK_PLANNED_DATE,
+        )
+
+        assertStatus(status, HTTP_200_OK)
+        assertTaskWithDict(task, **FIRST_TASK_CHANGE_TASK_PLANNED_DATE_TASK)
+
+    # test for changing task planned date with non existed task id
+    def test_given_when_change_the_task_planned_date_with_non_existed_task_id_then_return_TASK_NOT_FOUND_and_none(self):
+        status, task = self.task_controller.change_task_planned_date_by_task_id_and_user_id(
+            userId=FIRST_USER_USERID,
+            taskId=FIRST_TASK[TASK_ID_KEY],
+            newTaskPlannedDate=FIRST_TASK_CHANGE_TASK_PLANNED_DATE,
+        )
+
+        assertStatus(status, HTTP_404_NOT_FOUND, TASK_NOT_FOUND_MESSAGE)
+        assert task is None
+
+    # test for changing task planned date with wrong user id (no permission)
+    def test_given_when_change_the_task_planned_date_with_wrong_user_id_then_return_NO_PERMISSION_STATUS_and_none(self):
+        createFirstUserBy(self.user_controller)
+        createFirstTaskForFirstUserBy(self.task_controller)
+
+        status, task = self.task_controller.change_task_planned_date_by_task_id_and_user_id(
+            userId=FIRST_USER_WRONG_USERID,
+            taskId=FIRST_TASK[TASK_ID_KEY],
+            newTaskPlannedDate=FIRST_TASK_CHANGE_TASK_PLANNED_DATE,
+        )
+
+        assertStatus(status, HTTP_403_FORBIDDEN, NO_PERMISSION_MESSAGE)
         assert task is None

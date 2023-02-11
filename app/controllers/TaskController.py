@@ -385,3 +385,51 @@ class TaskController:
         self.session.commit()
 
         return status, None
+
+    def change_task_planned_date_by_task_id_and_user_id(self,
+                                                        userId: int,
+                                                        taskId: int,
+                                                        newTaskPlannedDate: str):
+        """
+        Change the task planned date by the given taskId.
+
+        Parameters
+        ----------
+            userId : int
+                The id of the user who create the task.
+
+            taskId : int
+                The id of the task.
+
+            newTaskPlannedDate : str
+                The planned date of the task.
+
+        Returns
+        -------
+            status : dict
+                The status of the request.
+
+                status_code: int
+                    The status code of the request.
+                message: str
+                    The message of the request.
+
+            task : SqlAlchemy object
+                The task object.
+        """
+        # TODO: Get the task by the given taskId, change the taskPlannedDate to newTaskPlannedDate
+        # and return HTTP_200_OK and the task object.
+        # TODO: If the task is not found, return TASK_NOT_FOUND_STATUS and None.
+
+        status = OK_STATUS
+
+        task = self.session.query(Task).filter(Task.taskId == taskId).first()
+        if task is None:
+            status = TASK_NOT_FOUND_STATUS
+        elif task.userId != userId:
+            status = NO_PERMISSION_STATUS
+            task = None
+        else:
+            task.plannedDate = newTaskPlannedDate
+
+        return status, task

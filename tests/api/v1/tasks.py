@@ -221,3 +221,20 @@ class TaskEndToEndTest(unittest.TestCase):
 
         assert response.status_code == HTTP_200_OK
         assert response.json() is None
+
+    # e22 test for deleting all tasks
+    def test_delete_all_tasks(self):
+        createFirstUserBy(self.user_controller)
+        createFirstTaskForFirstUserBy(self.task_controller)
+        token = getFirstUserTokenBy()
+
+        response = test_client.delete(
+            TASK_ROUTE_PREFIX,
+            headers={
+                AUTHORIZATION_KEY: token,
+                USERID_KEY: str(FIRST_USER_USERID),
+            },
+        )
+
+        assert response.status_code == HTTP_200_OK
+        assert response.json() is None

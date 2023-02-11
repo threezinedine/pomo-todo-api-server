@@ -14,6 +14,7 @@ from constants.routes import (
     TASK_CHANGE_TASK_DESCRIPTION_ROUTE,
     TASK_CHANGE_TASK_NAME_ROUTE,
     TASK_COMPLETE_ROUTE,
+    TASK_DELETE_ALL_ROUTE,
     TASK_DELETE_ROUTE,
     TASK_GET_ALL_ROUTE,
     TASK_GET_ROUTE,
@@ -136,6 +137,7 @@ def change_task_description(task: TaskChangeTaskDescriptionRequestModel,
 
     return task
 
+
 @router.delete(
     TASK_DELETE_ROUTE,
     status_code=HTTP_200_OK,
@@ -146,6 +148,21 @@ def delete_task(taskId: int,
     status, task = TaskController(session).delete_task_by_task_id_and_user_id(
         userId=userInfo[USERID_KEY],
         taskId=taskId,
+    )
+
+    handleStatus(status)
+
+    return None
+
+
+@router.delete(
+    TASK_DELETE_ALL_ROUTE,
+    status_code=HTTP_200_OK,
+)
+def delete_all_tasks(session=Depends(get_session),
+                     userInfo: dict = Depends(get_token)):
+    status, _ = TaskController(session).delete_all_tasks_by_user_id(
+        userId=userInfo[USERID_KEY],
     )
 
     handleStatus(status)
