@@ -12,6 +12,7 @@ from constants.database.user import USERID_KEY
 
 from constants.routes import (
     TASK_COMPLETE_ROUTE,
+    TASK_GET_ROUTE,
     TASK_ROUTE_PREFIX,
     TASK_TAG,
     TASK_CREATE_ROUTE,
@@ -59,3 +60,22 @@ def complete_task(task: TaskCompleteRequestModel,
     handleStatus(status)
 
     return task
+
+
+# Getting a task with task id route which is obtain from url path.
+@router.get(
+    TASK_GET_ROUTE,
+    status_code=HTTP_200_OK,
+    response_model=TaskResponseModel,
+)
+def get_task(taskId: int,
+                session=Depends(get_session),
+                userInfo: dict = Depends(get_token)):
+        status, task = TaskController(session).get_task_by_task_id_and_user_id(
+            userId=userInfo[USERID_KEY],
+            taskId=taskId,
+        )
+    
+        handleStatus(status)
+    
+        return task

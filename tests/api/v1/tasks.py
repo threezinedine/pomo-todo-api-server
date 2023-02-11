@@ -29,6 +29,7 @@ from constants.test.task import (
 from constants.routes import (
     TASK_CREATE_FULL_ROUTE,
     TASK_COMPLETE_FULL_ROUTE,
+    TASK_ROUTE_PREFIX,
 )
 from constants.test.user import FIRST_USER_USERID, SECOND_USER_USERID
 
@@ -164,12 +165,13 @@ class TaskEndToEndTest(unittest.TestCase):
         )
 
         response = test_client.get(
-            f"{TASK_COMPLETE_FULL_ROUTE}/{FIRST_TASK_TASK_ID}",
+            f"{TASK_ROUTE_PREFIX}/{FIRST_TASK_TASK_ID}",
             headers={
                 AUTHORIZATION_KEY: token,
                 USERID_KEY: str(FIRST_USER_USERID),
             },
         )
 
+        print(response.json(), response)
         assert response.status_code == HTTP_200_OK
         assertTaskWithDict(response.json(), **FIRST_TASK)
