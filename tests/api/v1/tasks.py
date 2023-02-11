@@ -19,6 +19,8 @@ from constants.message import NO_PERMISSION_MESSAGE
 from constants.test.task import (
     FIRST_TASK,
     FIRST_TASK_CHANGE_TASK_NAME,
+    FIRST_TASK_CHANGE_TASK_PLANNED_DATE,
+    FIRST_TASK_CHANGE_TASK_PLANNED_DATE_TASK,
     FIRST_TASK_CHANGED_TASK_NAME_TASK,
     FIRST_TASK_COMPLETE,
     FIRST_TASK_COMPLETED_TIME,
@@ -238,3 +240,26 @@ class TaskEndToEndTest(unittest.TestCase):
 
         assert response.status_code == HTTP_200_OK
         assert response.json() is None
+
+    # e2e test for changing the planned date of a task
+    def test_change_planned_date_of_a_task(self):
+        createFirstUserBy(self.user_controller)
+        createFirstTaskForFirstUserBy(self.task_controller)
+        token = getFirstUserTokenBy()
+
+        response = test_client.put(
+            f"{TASK_ROUTE_PREFIX}/planned-date/{FIRST_TASK_TASK_ID}",
+            headers={
+                AUTHORIZATION_KEY: token,
+                USERID_KEY: str(FIRST_USER_USERID),
+            },
+            json={
+                TASK_ID_KEY: FIRST_TASK_TASK_ID,
+                TASK_PLANNED_DATE_KEY: FIRST_TASK_CHANGE_TASK_PLANNED_DATE,
+            }
+        )
+
+        print(response, response.json())
+        assert response.status_code == HTTP_200_OK
+        assertTaskWithDict(response.json(), **
+                           FIRST_TASK_CHANGE_TASK_PLANNED_DATE_TASK)

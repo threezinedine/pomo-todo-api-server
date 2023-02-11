@@ -3,7 +3,7 @@ from fastapi import (
     APIRouter,
     Depends,
 )
-from app.schemas.TaskSchema import TaskChangeTaskDescriptionRequestModel, TaskChangeTaskNameRequestModel, TaskCompleteRequestModel, TaskRequestModel, TaskResponseModel
+from app.schemas.TaskSchema import TaskChangeTaskDescriptionRequestModel, TaskChangeTaskNameRequestModel, TaskChangeTaskPlannedDateRequestModel, TaskCompleteRequestModel, TaskRequestModel, TaskResponseModel
 from app.utils.auth import get_token
 from app.utils.api import handleStatus
 from app.controllers.TaskController import TaskController
@@ -13,6 +13,7 @@ from constants.database.user import USERID_KEY
 from constants.routes import (
     TASK_CHANGE_TASK_DESCRIPTION_ROUTE,
     TASK_CHANGE_TASK_NAME_ROUTE,
+    TASK_CHANGE_TASK_PLANNED_DATE_ROUTE,
     TASK_COMPLETE_ROUTE,
     TASK_DELETE_ALL_ROUTE,
     TASK_DELETE_ROUTE,
@@ -168,3 +169,22 @@ def delete_all_tasks(session=Depends(get_session),
     handleStatus(status)
 
     return None
+
+
+@router.put(
+    TASK_CHANGE_TASK_PLANNED_DATE_ROUTE,
+    status_code=HTTP_200_OK,
+    response_model=TaskResponseModel,
+)
+def change_task_planned_date(task: TaskChangeTaskPlannedDateRequestModel,
+                             session=Depends(get_session),
+                             userInfo: dict = Depends(get_token)):
+    status, task = TaskController(session).change_task_planned_date_by_task_id_and_user_id(
+        userId=userInfo[USERID_KEY],
+        taskId=task.taskId,
+        newTaskPlannedDate=task.plannedDate,
+    )
+
+    handleStatus(status)
+
+    return task

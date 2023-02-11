@@ -46,3 +46,11 @@ class TaskChangeTaskDescriptionRequestModel(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class TaskChangeTaskPlannedDateRequestModel(BaseModel):
+    taskId: int
+    plannedDate: date
+
+    class Config:
+        orm_mode = True
