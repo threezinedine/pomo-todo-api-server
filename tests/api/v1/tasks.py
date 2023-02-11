@@ -26,6 +26,8 @@ from constants.test.task import (
     FIRST_TASK_TASK_ID,
     FIRST_TASK_TASK_NAME,
     FIRST_TASK_TASK_PLANNED_DATE,
+    FIRST_TASK_CHANGE_TASK_DESCRIPTION,
+    FIRST_TASK_CHANGE_TASK_DESCRIPTION_TASK,
 )
 from constants.routes import (
     TASK_CREATE_FULL_ROUTE,
@@ -179,3 +181,26 @@ class TaskEndToEndTest(unittest.TestCase):
         assert response.status_code == HTTP_200_OK
         assertTaskWithDict(response.json(), **
                            FIRST_TASK_CHANGED_TASK_NAME_TASK)
+
+    # e2e test for changing the task description
+    def test_change_task_description(self):
+        createFirstUserBy(self.user_controller)
+        createFirstTaskForFirstUserBy(self.task_controller)
+        token = getFirstUserTokenBy()
+
+        response = test_client.put(
+            f"{TASK_ROUTE_PREFIX}/task-description/{FIRST_TASK_TASK_ID}",
+            headers={
+                AUTHORIZATION_KEY: token,
+                USERID_KEY: str(FIRST_USER_USERID),
+            },
+            json={
+                TASK_ID_KEY: FIRST_TASK_TASK_ID,
+                TASK_DESCRIPTION_KEY: FIRST_TASK_CHANGE_TASK_DESCRIPTION,
+            }
+        )
+
+        print(response, response.json())
+        assert response.status_code == HTTP_200_OK
+        assertTaskWithDict(response.json(), **
+                           FIRST_TASK_CHANGE_TASK_DESCRIPTION_TASK)

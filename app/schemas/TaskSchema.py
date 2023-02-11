@@ -38,3 +38,11 @@ class TaskChangeTaskNameRequestModel(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class TaskChangeTaskDescriptionRequestModel(BaseModel):
+    taskId: int
+    taskDescription: str
+
+    class Config:
+        orm_mode = True
