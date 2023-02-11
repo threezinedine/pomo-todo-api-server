@@ -79,7 +79,8 @@ class TaskControllerTest(unittest.TestCase):
             plannedDate=date.fromisoformat(FIRST_TASK_TASK_PLANNED_DATE),
         )
 
-        status, task = self.task_controller.complete_task_by_task_id(
+        status, task = self.task_controller.complete_task_by_task_id_and_user_id(
+            userId=FIRST_USER_USERID,
             taskId=FIRST_TASK[TASK_ID_KEY],
             completedTime=datetime.fromisoformat(
                 FIRST_TASK_COMPLETE['completedTime']),
@@ -89,7 +90,8 @@ class TaskControllerTest(unittest.TestCase):
         assertTaskWithDict(task, **FIRST_TASK_COMPLETE)
 
     def test_given_when_complete_a_task_with_non_existed_task_id_then_return_TASK_NOT_FOUND_and_none(self):
-        status, task = self.task_controller.complete_task_by_task_id(
+        status, task = self.task_controller.complete_task_by_task_id_and_user_id(
+            userId=FIRST_USER_USERID,
             taskId=FIRST_TASK[TASK_ID_KEY],
             completedTime=datetime.fromisoformat(
                 FIRST_TASK_COMPLETE[TASK_COMPLETED_TIME_KEY]),
