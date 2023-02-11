@@ -204,3 +204,20 @@ class TaskEndToEndTest(unittest.TestCase):
         assert response.status_code == HTTP_200_OK
         assertTaskWithDict(response.json(), **
                            FIRST_TASK_CHANGE_TASK_DESCRIPTION_TASK)
+
+    # e2e test for deleting a task by task id
+    def test_delete_task_by_task_id(self):
+        createFirstUserBy(self.user_controller)
+        createFirstTaskForFirstUserBy(self.task_controller)
+        token = getFirstUserTokenBy()
+
+        response = test_client.delete(
+            f"{TASK_ROUTE_PREFIX}/{FIRST_TASK_TASK_ID}",
+            headers={
+                AUTHORIZATION_KEY: token,
+                USERID_KEY: str(FIRST_USER_USERID),
+            },
+        )
+
+        assert response.status_code == HTTP_200_OK
+        assert response.json() is None
