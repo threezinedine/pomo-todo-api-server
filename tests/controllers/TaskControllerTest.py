@@ -8,7 +8,8 @@ from constants import (
     HTTP_201_CREATED,
     HTTP_200_OK,
 )
-from constants.database.task import TASK_ID_KEY
+from constants.database.task import TASK_COMPLETED_TIME_KEY, TASK_ID_KEY
+from constants.status import TASK_NOT_FOUND_STATUS
 from tests.database import (
     get_testing_session,
 )
@@ -84,3 +85,13 @@ class TaskControllerTest(unittest.TestCase):
 
         assertStatus(status, HTTP_200_OK)
         assertTaskWithDict(task, **FIRST_TASK_COMPLETE)
+
+    def test_given_when_complete_a_task_with_non_existed_task_id_then_return_TASK_NOT_FOUND_and_none(self):
+        status, task = self.task_controller.complete_task_by_task_id(
+            taskId=FIRST_TASK[TASK_ID_KEY],
+            completedTime=datetime.fromisoformat(
+                FIRST_TASK_COMPLETE[TASK_COMPLETED_TIME_KEY]),
+        )
+
+        assertStatus(status, TASK_NOT_FOUND_STATUS)
+        assert task is None
