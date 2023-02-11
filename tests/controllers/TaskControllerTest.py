@@ -234,3 +234,39 @@ class TaskControllerTest(unittest.TestCase):
 
         assertStatus(status, HTTP_403_FORBIDDEN, NO_PERMISSION_MESSAGE)
         assert task is None
+
+    # add test for deleting a task by task id
+    def test_given_a_task_exists_when_delete_the_task_then_return_STATUS_OK_and_none(self):
+        createFirstUserBy(self.user_controller)
+        createFirstTaskForFirstUserBy(self.task_controller)
+
+        status, task = self.task_controller.delete_task_by_task_id_and_user_id(
+            userId=FIRST_USER_USERID,
+            taskId=FIRST_TASK[TASK_ID_KEY],
+        )
+
+        assertStatus(status, HTTP_200_OK)
+        assert task is None
+
+    # test for deleting a task with non existed task id -> return TASK_NOT_FOUND, None
+    def test_given_when_delete_the_task_with_non_existed_task_id_then_return_TASK_NOT_FOUND_and_none(self):
+        status, task = self.task_controller.delete_task_by_task_id_and_user_id(
+            userId=FIRST_USER_USERID,
+            taskId=FIRST_TASK[TASK_ID_KEY],
+        )
+
+        assertStatus(status, HTTP_404_NOT_FOUND, TASK_NOT_FOUND_MESSAGE)
+        assert task is None
+
+    # test for deleting a task with wrong user id (no permission)
+    def test_given_when_delete_the_task_with_wrong_user_id_then_return_NO_PERMISSION_STATUS_and_none(self):
+        createFirstUserBy(self.user_controller)
+        createFirstTaskForFirstUserBy(self.task_controller)
+
+        status, task = self.task_controller.delete_task_by_task_id_and_user_id(
+            userId=FIRST_USER_WRONG_USERID,
+            taskId=FIRST_TASK[TASK_ID_KEY],
+        )
+
+        assertStatus(status, HTTP_403_FORBIDDEN, NO_PERMISSION_MESSAGE)
+        assert task is None
