@@ -1,3 +1,4 @@
+from datetime import datetime
 from sqlalchemy.orm import Session
 
 from constants.status import CREATED_STATUS, OK_STATUS
@@ -85,3 +86,44 @@ class TaskController:
         tasks = self.session.query(Task).all()
 
         return status, tasks
+
+    def complete_task_by_task_id(self,
+                                 taskId: int,
+                                 completedTime: datetime):
+        """
+        Complete the task by the given taskId.
+
+        Parameters
+        ----------
+            taskId : int
+                The id of the task.
+
+            completedTime : datetime
+                The time when the task is completed.
+
+        Returns
+        -------
+            status : dict
+                The status of the request.
+
+                status_code: int
+                    The status code of the request.
+                message: str
+                    The message of the request.
+
+            task : SqlAlchemy object
+                The task object.
+        """
+        # TODO: Get the task by the given taskId,
+        # udpate the taskComplete to True and the current time to completedTime
+        # and return HTTP_200_OK and the task object.
+
+        status = OK_STATUS
+
+        task = self.session.query(Task).filter(Task.taskId == taskId).first()
+        task.taskComplete = True
+        task.completedTime = completedTime
+
+        self.session.commit()
+
+        return status, task

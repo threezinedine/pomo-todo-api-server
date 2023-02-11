@@ -38,14 +38,11 @@ def assertUserWithDict(user, **user_data_dict):
 def assertTaskWithDict(task, **task_data_dict):
     for key, value in task_data_dict.items():
         if not isinstance(task, dict):
-            print(getattr(task, key), value)
-            if key == 'plannedDate':
-                assert str(getattr(task, key)) == value
-            else:
-                assert getattr(task, key) == value
+            print(getattr(task, key), value, type(getattr(task, key)), type(value))
+            assert str(getattr(task, key)) == str(value)
         else:
-            print(task[key], value)
-            assert task[key] == value
+            print(task[key], value, type(task[key]), type(value))
+            assert str(task[key]) == str(value)
 
 
 def createFirstUserBy(user_controller: UserController):

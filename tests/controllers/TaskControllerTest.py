@@ -1,5 +1,5 @@
 import unittest
-from datetime import date
+from datetime import date, datetime
 
 from app.utils.database import (
     clear_data,
@@ -77,7 +77,9 @@ class TaskControllerTest(unittest.TestCase):
         )
 
         status, task = self.task_controller.complete_task_by_task_id(
-            taskId=FIRST_TASK[TASK_ID_KEY]
+            taskId=FIRST_TASK[TASK_ID_KEY],
+            completedTime=datetime.fromisoformat(
+                FIRST_TASK_COMPLETE['completedTime']),
         )
 
         assertStatus(status, HTTP_200_OK)
