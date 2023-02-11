@@ -3,7 +3,9 @@ TASK_NAME_MAX_LENGTH = 30
 TASK_DESCRIPTION_MAX_LENGTH = 200
 
 
+TASK_ID_KEY = "taskId"
 TASK_NAME_KEY = "taskName"
 TASK_DESCRIPTION_KEY = "taskDescription"
 TASK_PLANNED_DATE_KEY = "plannedDate"
-
+TASK_COMPLETE_KEY = "taskComplete"
+TASK_COMPLETED_TIME_KEY = "completedTime"
