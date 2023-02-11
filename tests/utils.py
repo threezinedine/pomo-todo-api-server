@@ -6,6 +6,8 @@ from constants import (
 from constants.test.user import (
     FIRST_USER_USERNAME,
     FIRST_USER_PASSWORD,
+    SECOND_USER_PASSWORD,
+    SECOND_USER_USERNAME,
 )
 from constants.database.user import (
     USERNAME_KEY,
@@ -38,7 +40,8 @@ def assertUserWithDict(user, **user_data_dict):
 def assertTaskWithDict(task, **task_data_dict):
     for key, value in task_data_dict.items():
         if not isinstance(task, dict):
-            print(getattr(task, key), value, type(getattr(task, key)), type(value))
+            print(getattr(task, key), value, type(
+                getattr(task, key)), type(value))
             assert str(getattr(task, key)) == str(value)
         else:
             print(task[key], value, type(task[key]), type(value))
@@ -56,6 +59,23 @@ def getFirstUserTokenBy():
         json={
             USERNAME_KEY: FIRST_USER_USERNAME,
             PASSWORD_KEY: FIRST_USER_PASSWORD,
+        }
+    )
+
+    return response.json()[TOKEN_KEY]
+
+
+def createSecondUserBy(user_controller: UserController):
+    return user_controller.create_new_user(username=SECOND_USER_USERNAME,
+                                           password=SECOND_USER_PASSWORD)
+
+
+def getSecondUserTokenBy():
+    response = test_client.post(
+        USER_LOGIN_FULL_ROUTE,
+        json={
+            USERNAME_KEY: SECOND_USER_USERNAME,
+            PASSWORD_KEY: SECOND_USER_PASSWORD,
         }
     )
 

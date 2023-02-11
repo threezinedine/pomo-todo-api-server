@@ -50,3 +50,12 @@ FIRST_USER_FULL_DICT_NO_DESC_IMAG = {
     USER_DESCRIPTION_KEY: None,
     IMAGE_PATH_KEY: FIRST_USER_TEST_IMAGE_PATH,
 }
+
+
+SECOND_USER_USERID = 2
+SECOND_USER_USERNAME = "threezinedinethirdusername"
+SECOND_USER_PASSWORD = "threezinedinethirdpassword"
+SECOND_USER_WRONG_USERNAME = "threezinedinethirdwrongusername"
+SECOND_USER_WRONG_PASSWORD = "threezinedinethirdwrongpassword"
+
+SECOND_USER_NEW_USER_DESCRIPTION = "This is the description for the second_testing_user"

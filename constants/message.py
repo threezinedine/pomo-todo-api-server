@@ -7,3 +7,5 @@ TOKEN_IS_NOT_VALID_MESSAGE = "Token is not valid."
 USERID_DOES_NOT_EXIST_MESSAGE = "userId does not exist."
 
 TASK_NOT_FOUND_MESSAGE = "Task not found."
+
+NO_PERMISSION_MESSAGE = "No permission."

@@ -2,19 +2,24 @@ import unittest
 from app.controllers.TaskController import TaskController
 from constants import (
     AUTHORIZATION_KEY,
+    DETAIL_MESSAGE_KEY,
     HTTP_200_OK,
     HTTP_201_CREATED,
+    HTTP_403_FORBIDDEN,
 )
 from constants.database.user import USERID_KEY
 from constants.database.task import (
+    TASK_COMPLETED_TIME_KEY,
     TASK_ID_KEY,
     TASK_DESCRIPTION_KEY,
     TASK_NAME_KEY,
     TASK_PLANNED_DATE_KEY
 )
+from constants.message import NO_PERMISSION_MESSAGE
 from constants.test.task import (
     FIRST_TASK,
     FIRST_TASK_COMPLETE,
+    FIRST_TASK_COMPLETED_TIME,
     FIRST_TASK_TASK_DESCRIPTION,
     FIRST_TASK_TASK_ID,
     FIRST_TASK_TASK_NAME,
@@ -37,7 +42,7 @@ from app.utils.database import (
 )
 
 from app.controllers.UserController import UserController
-from tests.utils import assertTaskWithDict, createFirstUserBy, getFirstUserTokenBy
+from tests.utils import assertTaskWithDict, createFirstUserBy, createSecondUserBy, getFirstUserTokenBy
 
 
 class TaskEndToEndTest(unittest.TestCase):
@@ -94,8 +99,45 @@ class TaskEndToEndTest(unittest.TestCase):
             },
             json={
                 TASK_ID_KEY: FIRST_TASK_TASK_ID,
+                TASK_COMPLETED_TIME_KEY: FIRST_TASK_COMPLETED_TIME,
             }
         )
 
+        response_data = response.json()
+        response_data[TASK_COMPLETED_TIME_KEY] = response_data[TASK_COMPLETED_TIME_KEY].replace(
+            "T", " ")
         assert response.status_code == HTTP_200_OK
-        assertTaskWithDict(response.json(), **FIRST_TASK_COMPLETE)
+        assertTaskWithDict(response_data, **FIRST_TASK_COMPLETE)
+
+    def test_complete_task_which_have_no_permission(self):
+        createFirstUserBy(self.user_controller)
+        createSecondUserBy(self.user_controller)
+        token = getFirstUserTokenBy()
+
+        test_client.post(
+            TASK_CREATE_FULL_ROUTE,
+            headers={
+                AUTHORIZATION_KEY: token,
+                USERID_KEY: str(FIRST_USER_USERID),
+            },
+            json={
+                TASK_NAME_KEY: FIRST_TASK_TASK_NAME,
+                TASK_DESCRIPTION_KEY: FIRST_TASK_TASK_DESCRIPTION,
+                TASK_PLANNED_DATE_KEY: FIRST_TASK_TASK_PLANNED_DATE,
+            }
+        )
+
+        response = test_client.put(
+            TASK_COMPLETE_FULL_ROUTE,
+            headers={
+                AUTHORIZATION_KEY: token,
+                USERID_KEY: str(FIRST_USER_USERID + 1),
+            },
+            json={
+                TASK_ID_KEY: FIRST_TASK_TASK_ID,
+                TASK_COMPLETED_TIME_KEY: FIRST_TASK_COMPLETED_TIME,
+            }
+        )
+
+        assert response.status_code == HTTP_403_FORBIDDEN
+        assert response.json()[DETAIL_MESSAGE_KEY] == NO_PERMISSION_MESSAGE
